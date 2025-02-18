@@ -44,9 +44,10 @@ public class signinPanel extends javax.swing.JFrame {
         nameField = new javax.swing.JTextField();
         emailField = new javax.swing.JTextField();
         numberField = new javax.swing.JTextField();
-        addressField = new javax.swing.JTextField();
+        brgyField = new javax.swing.JTextField();
         signUpButton = new javax.swing.JButton();
-        roleChoice = new javax.swing.JComboBox<>();
+        cityField = new javax.swing.JTextField();
+        provinceField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("NEW USER");
@@ -54,6 +55,11 @@ public class signinPanel extends javax.swing.JFrame {
         setLocationByPlatform(true);
         setPreferredSize(new java.awt.Dimension(400, 450));
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         jPanel3.setBackground(new java.awt.Color(255, 204, 204));
@@ -100,7 +106,7 @@ public class signinPanel extends javax.swing.JFrame {
         });
         passwordField.setEchoChar((char) 0);
         jPanel4.add(passwordField);
-        passwordField.setBounds(190, 250, 170, 30);
+        passwordField.setBounds(190, 220, 170, 30);
 
         nameField.setBackground(new java.awt.Color(220, 215, 201));
         nameField.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
@@ -122,7 +128,7 @@ public class signinPanel extends javax.swing.JFrame {
             }
         });
         jPanel4.add(nameField);
-        nameField.setBounds(30, 30, 330, 30);
+        nameField.setBounds(30, 40, 330, 30);
 
         emailField.setBackground(new java.awt.Color(220, 215, 201));
         emailField.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
@@ -139,7 +145,7 @@ public class signinPanel extends javax.swing.JFrame {
             }
         });
         jPanel4.add(emailField);
-        emailField.setBounds(30, 150, 330, 30);
+        emailField.setBounds(30, 160, 330, 30);
 
         numberField.setBackground(new java.awt.Color(220, 215, 201));
         numberField.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
@@ -161,24 +167,25 @@ public class signinPanel extends javax.swing.JFrame {
             }
         });
         jPanel4.add(numberField);
-        numberField.setBounds(30, 250, 140, 30);
+        numberField.setBounds(30, 220, 140, 30);
 
-        addressField.setBackground(new java.awt.Color(220, 215, 201));
-        addressField.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
-        addressField.setText("ADDRESS");
-        addressField.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 4, 1, 1));
-        addressField.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        addressField.setMargin(new java.awt.Insets(2, 1, 2, 6));
-        addressField.addFocusListener(new java.awt.event.FocusAdapter() {
+        brgyField.setBackground(new java.awt.Color(220, 215, 201));
+        brgyField.setColumns(3);
+        brgyField.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        brgyField.setText("BARANGAY");
+        brgyField.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 4, 1, 1));
+        brgyField.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        brgyField.setMargin(new java.awt.Insets(2, 1, 2, 6));
+        brgyField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                addressFieldFocusGained(evt);
+                brgyFieldFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                addressFieldFocusLost(evt);
+                brgyFieldFocusLost(evt);
             }
         });
-        jPanel4.add(addressField);
-        addressField.setBounds(30, 90, 330, 30);
+        jPanel4.add(brgyField);
+        brgyField.setBounds(30, 100, 100, 30);
 
         signUpButton.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
         signUpButton.setForeground(new java.awt.Color(220, 215, 201));
@@ -187,6 +194,7 @@ public class signinPanel extends javax.swing.JFrame {
         signUpButton.setBorder(null);
         signUpButton.setBorderPainted(false);
         signUpButton.setContentAreaFilled(false);
+        signUpButton.setFocusCycleRoot(true);
         signUpButton.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         signUpButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -194,13 +202,48 @@ public class signinPanel extends javax.swing.JFrame {
             }
         });
         jPanel4.add(signUpButton);
-        signUpButton.setBounds(120, 300, 130, 30);
+        signUpButton.setBounds(120, 280, 130, 40);
 
-        roleChoice.setBackground(new java.awt.Color(220, 215, 201));
-        roleChoice.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        roleChoice.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Member", "Staff" }));
-        jPanel4.add(roleChoice);
-        roleChoice.setBounds(30, 200, 330, 30);
+        cityField.setBackground(new java.awt.Color(220, 215, 201));
+        cityField.setColumns(3);
+        cityField.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        cityField.setText("CITY");
+        cityField.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 4, 1, 1));
+        cityField.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        cityField.setMargin(new java.awt.Insets(2, 1, 2, 6));
+        cityField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                cityFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cityFieldFocusLost(evt);
+            }
+        });
+        cityField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cityFieldActionPerformed(evt);
+            }
+        });
+        jPanel4.add(cityField);
+        cityField.setBounds(140, 100, 110, 30);
+
+        provinceField.setBackground(new java.awt.Color(220, 215, 201));
+        provinceField.setColumns(3);
+        provinceField.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        provinceField.setText("PROVINCE");
+        provinceField.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 4, 1, 1));
+        provinceField.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        provinceField.setMargin(new java.awt.Insets(2, 1, 2, 6));
+        provinceField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                provinceFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                provinceFieldFocusLost(evt);
+            }
+        });
+        jPanel4.add(provinceField);
+        provinceField.setBounds(260, 100, 100, 30);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -265,17 +308,17 @@ public class signinPanel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_numberFieldFocusLost
 
-    private void addressFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_addressFieldFocusGained
-        if (addressField.getText().equals("ADDRESS")) {
-            addressField.setText("");
+    private void brgyFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_brgyFieldFocusGained
+        if (brgyField.getText().equals("BARANGAY")) {
+            brgyField.setText("");
         }
-    }//GEN-LAST:event_addressFieldFocusGained
+    }//GEN-LAST:event_brgyFieldFocusGained
 
-    private void addressFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_addressFieldFocusLost
-        if (addressField.getText().isEmpty()) {
-            addressField.setText("ADDRESS");
+    private void brgyFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_brgyFieldFocusLost
+        if (brgyField.getText().isEmpty()) {
+            brgyField.setText("BARANGAY");
         }
-    }//GEN-LAST:event_addressFieldFocusLost
+    }//GEN-LAST:event_brgyFieldFocusLost
 
     private void numberFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_numberFieldKeyTyped
        char c = evt.getKeyChar();
@@ -290,71 +333,104 @@ public class signinPanel extends javax.swing.JFrame {
 
     private void signUpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signUpButtonActionPerformed
         String name = nameField.getText().trim();
-    String address = addressField.getText().trim();
-    String email = emailField.getText().trim();
-    String role = roleChoice.getSelectedItem().toString().trim();
-    String contact = numberField.getText().trim();
-    String password = new String(passwordField.getPassword()).trim();
+        String brgy = brgyField.getText().trim();
+        String city = brgyField.getText().trim();
+        String prov = brgyField.getText().trim();
+        String address = brgy + ", " + city + ", " + prov;
+        String email = emailField.getText().trim();
+        String contact = numberField.getText().trim();
+        String password = new String(passwordField.getPassword()).trim();
 
-    if (name.isEmpty() || address.isEmpty() || email.isEmpty() || role.isEmpty() || contact.isEmpty() || password.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "All fields are required!", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-        JOptionPane.showMessageDialog(this, "Invalid email format!", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    if (!contact.matches("\\d+")) {
-        JOptionPane.showMessageDialog(this, "Contact number must contain only digits!", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    if (password.length() < 6) {
-        JOptionPane.showMessageDialog(this, "Password must be at least 6 characters long!", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    String url = "jdbc:mysql://localhost:3306/lms_db";
-    String user = "root"; 
-    String pass = "";  
-
-    Connection conn = null;
-    PreparedStatement pstmt = null;
-    
-    try {
-        conn = DriverManager.getConnection(url, user, pass);
-        String sql = "INSERT INTO users (name, email, password, address, contact_info, role) VALUES (?, ?, ?, ?, ?, ?)";
-        pstmt = conn.prepareStatement(sql);
-        
-        pstmt.setString(1, name);
-        pstmt.setString(2, email);
-        pstmt.setString(3, password);
-        pstmt.setString(4, address);
-        pstmt.setString(5, contact);
-        pstmt.setString(6, role);
-
-        int rowsInserted = pstmt.executeUpdate();
-        if (rowsInserted > 0) {
-            JOptionPane.showMessageDialog(this, "Sign-up successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            this.setVisible(false);  
-            loginPanel dashboard = new loginPanel();
-            dashboard.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(this, "Sign-up failed!", "Error", JOptionPane.ERROR_MESSAGE);
+        if (name.isEmpty() || address.isEmpty() || email.isEmpty() || contact.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "All fields are required!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, "Database error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    } finally {
+
+        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            JOptionPane.showMessageDialog(this, "Invalid email format!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (!contact.matches("\\d+")) {
+            JOptionPane.showMessageDialog(this, "Contact number must contain only digits!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (password.length() < 6) {
+            JOptionPane.showMessageDialog(this, "Password must be at least 6 characters long!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String url = "jdbc:mysql://localhost:3306/lms_db";
+        String user = "root"; 
+        String pass = "";  
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
         try {
-            if (pstmt != null) pstmt.close();
-            if (conn != null) conn.close();
+            conn = DriverManager.getConnection(url, user, pass);
+            String sql = "INSERT INTO users (name, email, password, address, contact_info, role) VALUES (?, ?, ?, ?, ?, 'Member')";
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, name);
+            pstmt.setString(2, email);
+            pstmt.setString(3, password);
+            pstmt.setString(4, address);
+            pstmt.setString(5, contact);
+
+            int rowsInserted = pstmt.executeUpdate();
+            if (rowsInserted > 0) {
+                JOptionPane.showMessageDialog(this, "Sign-up successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                this.setVisible(false);  
+                loginPanel dashboard = new loginPanel();
+                dashboard.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Sign-up failed!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Database error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
-    }
     }//GEN-LAST:event_signUpButtonActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        signUpButton.requestFocusInWindow();
+    }//GEN-LAST:event_formWindowOpened
+
+    private void cityFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cityFieldFocusGained
+        if (cityField.getText().equals("CITY")) {
+            cityField.setText("");
+        }
+    }//GEN-LAST:event_cityFieldFocusGained
+
+    private void cityFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cityFieldFocusLost
+        if (cityField.getText().isEmpty()) {
+            cityField.setText("CITY");
+        }
+    }//GEN-LAST:event_cityFieldFocusLost
+
+    private void provinceFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_provinceFieldFocusGained
+        if (provinceField.getText().equals("PROVINCE")) {
+            provinceField.setText("");
+        }
+    }//GEN-LAST:event_provinceFieldFocusGained
+
+    private void provinceFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_provinceFieldFocusLost
+        if (provinceField.getText().isEmpty()) {
+            provinceField.setText("PROVINCE");
+        }
+    }//GEN-LAST:event_provinceFieldFocusLost
+
+    private void cityFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cityFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cityFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -392,7 +468,8 @@ public class signinPanel extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField addressField;
+    private javax.swing.JTextField brgyField;
+    private javax.swing.JTextField cityField;
     private javax.swing.JTextField emailField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -401,7 +478,7 @@ public class signinPanel extends javax.swing.JFrame {
     private javax.swing.JTextField nameField;
     private javax.swing.JTextField numberField;
     private javax.swing.JPasswordField passwordField;
-    private javax.swing.JComboBox<String> roleChoice;
+    private javax.swing.JTextField provinceField;
     private javax.swing.JButton signUpButton;
     // End of variables declaration//GEN-END:variables
 }

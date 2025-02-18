@@ -6,6 +6,12 @@ package logOrSignIn;
 
 import java.awt.Color;
 import javax.swing.SwingUtilities;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import staff.staffDashboard;
 
 /**
  *
@@ -140,6 +146,11 @@ public class loginPanel extends javax.swing.JFrame {
         loginButton.setContentAreaFilled(false);
         loginButton.setFocusPainted(false);
         SwingUtilities.invokeLater(() -> loginButton.requestFocusInWindow());
+        loginButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginButtonActionPerformed(evt);
+            }
+        });
         jPanel2.add(loginButton);
         loginButton.setBounds(190, 300, 100, 40);
 
@@ -204,6 +215,45 @@ public class loginPanel extends javax.swing.JFrame {
             passwordField.setEchoChar('•');
         }
     }//GEN-LAST:event_passwordFieldFocusGained
+
+    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
+         String email = userIdField.getText();
+    String password = new String(passwordField.getPassword());
+    
+    if (email.isEmpty() || password.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter both email and password.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root"; 
+    String pass = ""; 
+    
+    try {
+        Connection conn = DriverManager.getConnection(url, user, pass);
+        String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, email);
+        pstmt.setString(2, password);
+        
+        ResultSet rs = pstmt.executeQuery();
+        
+        if (rs.next()) {
+            JOptionPane.showMessageDialog(this, "Login successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            this.setVisible(false);  // Assuming this is in a JFrame
+            staffDashboard dashboard = new staffDashboard();
+            dashboard.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid email or password.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        rs.close();
+        pstmt.close();
+        conn.close();
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this, "Database connection error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_loginButtonActionPerformed
 
     /**
      * @param args the command line arguments

@@ -35,8 +35,32 @@ public class memberDashboard extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
+        welcomeMsg = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        reservationList = new javax.swing.JList<>();
+        jLabel3 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        borrowedList = new javax.swing.JList<>();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        upcomingDues = new javax.swing.JList<>();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jTextField1 = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jButton1 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MEMBER DASHBOARD");
@@ -63,7 +87,7 @@ public class memberDashboard extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.1;
-        gridBagConstraints.weighty = 0.3;
+        gridBagConstraints.weighty = 0.8;
         getContentPane().add(jPanel1, gridBagConstraints);
 
         jTabbedPane1.setBackground(new java.awt.Color(44, 57, 48));
@@ -73,21 +97,225 @@ public class memberDashboard extends javax.swing.JFrame {
         jTabbedPane1.setFocusTraversalPolicyProvider(true);
         jTabbedPane1.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
 
-        jPanel2.setLayout(null);
-        jTabbedPane1.addTab("Dashboard", jPanel2);
+        jPanel2.setBackground(new java.awt.Color(245, 236, 213));
+        jPanel2.setForeground(new java.awt.Color(162, 123, 92));
+        jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        jPanel3.setLayout(null);
-        jTabbedPane1.addTab("Book Reservations", jPanel3);
+        welcomeMsg.setFont(new java.awt.Font("Bahnschrift", 0, 48)); // NOI18N
+        welcomeMsg.setText("MESSAGE");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        jPanel2.add(welcomeMsg, gridBagConstraints);
 
+        reservationList.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
+        reservationList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(reservationList);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.4;
+        gridBagConstraints.weighty = 0.5;
+        jPanel2.add(jScrollPane1, gridBagConstraints);
+
+        jLabel3.setFont(new java.awt.Font("Bahnschrift", 0, 28)); // NOI18N
+        jLabel3.setText("BOOK RESERVATIONS");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        jPanel2.add(jLabel3, gridBagConstraints);
+
+        borrowedList.setFont(new java.awt.Font("Bahnschrift", 0, 24)); // NOI18N
+        borrowedList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane3.setViewportView(borrowedList);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.1;
+        jPanel2.add(jScrollPane3, gridBagConstraints);
+
+        jLabel4.setFont(new java.awt.Font("Bahnschrift", 0, 26)); // NOI18N
+        jLabel4.setText("BOOKS BORROWED");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 2;
+        jPanel2.add(jLabel4, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.weightx = 0.1;
+        jPanel2.add(jLabel5, gridBagConstraints);
+
+        jLabel6.setFont(new java.awt.Font("Bahnschrift", 0, 36)); // NOI18N
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel6.setText("YOUR FINES: ₱ ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 0.1;
+        jPanel2.add(jLabel6, gridBagConstraints);
+
+        upcomingDues.setFont(new java.awt.Font("Bahnschrift", 0, 24)); // NOI18N
+        upcomingDues.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(upcomingDues);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        jPanel2.add(jScrollPane2, gridBagConstraints);
+
+        jLabel7.setText(" ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.1;
+        jPanel2.add(jLabel7, gridBagConstraints);
+
+        jLabel8.setFont(new java.awt.Font("Bahnschrift", 0, 26)); // NOI18N
+        jLabel8.setText("UPCOMING DUE DATES");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        jPanel2.add(jLabel8, gridBagConstraints);
+
+        jLabel9.setText(" ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.1;
+        jPanel2.add(jLabel9, gridBagConstraints);
+
+        jLabel10.setText(" ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.weightx = 0.1;
+        jPanel2.add(jLabel10, gridBagConstraints);
+
+        jLabel11.setText(" ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.1;
+        jPanel2.add(jLabel11, gridBagConstraints);
+
+        jLabel13.setFont(new java.awt.Font("Bahnschrift", 0, 36)); // NOI18N
+        jLabel13.setText("COST");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel2.add(jLabel13, gridBagConstraints);
+
+        jLabel14.setText(" ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.weighty = 0.1;
+        jPanel2.add(jLabel14, gridBagConstraints);
+
+        jTabbedPane1.addTab("Member Dashboard", jPanel2);
+
+        jPanel3.setBackground(new java.awt.Color(245, 236, 213));
+        jPanel3.setLayout(new java.awt.GridBagLayout());
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane4.setViewportView(jTable1);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 8;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 436;
+        gridBagConstraints.ipady = 382;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel3.add(jScrollPane4, gridBagConstraints);
+
+        jTextField1.setText("jTextField1");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.7;
+        gridBagConstraints.weighty = 0.1;
+        jPanel3.add(jTextField1, gridBagConstraints);
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        jPanel3.add(jComboBox1, gridBagConstraints);
+
+        jButton1.setText("jButton1");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridy = 1;
+        jPanel3.add(jButton1, gridBagConstraints);
+
+        jTabbedPane1.addTab("Browse Books and Reserve", jPanel3);
+
+        jPanel4.setBackground(new java.awt.Color(245, 236, 213));
         jPanel4.setLayout(null);
-        jTabbedPane1.addTab("Library Credits", jPanel4);
+        jTabbedPane1.addTab("Borrowed, Overdues & Fines", jPanel4);
+
+        jPanel5.setBackground(new java.awt.Color(245, 236, 213));
+        jPanel5.setLayout(null);
+        jTabbedPane1.addTab("Notifications & Alerts", jPanel5);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.1;
-        gridBagConstraints.weighty = 2.0;
+        gridBagConstraints.weighty = 2.2;
         getContentPane().add(jTabbedPane1, gridBagConstraints);
         jTabbedPane1.setUI(new BasicTabbedPaneUI() {
             @Override
@@ -135,12 +363,36 @@ public class memberDashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList<String> borrowedList;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JList<String> reservationList;
+    private javax.swing.JList<String> upcomingDues;
+    private javax.swing.JLabel welcomeMsg;
     // End of variables declaration//GEN-END:variables
 }

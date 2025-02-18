@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
+import staff.staffDashboard;
 
 /**
  *
@@ -239,7 +240,9 @@ public class loginPanel extends javax.swing.JFrame {
         
         if (rs.next()) {
             JOptionPane.showMessageDialog(this, "Login successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            // Proceed to the next page or dashboard
+            this.setVisible(false);  // Assuming this is in a JFrame
+            staffDashboard dashboard = new staffDashboard();
+            dashboard.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "Invalid email or password.", "Error", JOptionPane.ERROR_MESSAGE);
         }

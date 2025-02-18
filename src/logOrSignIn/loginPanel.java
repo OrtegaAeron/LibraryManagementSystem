@@ -240,7 +240,7 @@ public class loginPanel extends javax.swing.JFrame {
         
         if (rs.next()) {
             JOptionPane.showMessageDialog(this, "Login successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            this.setVisible(false);  // Assuming this is in a JFrame
+            this.setVisible(false);
             staffDashboard dashboard = new staffDashboard();
             dashboard.setVisible(true);
         } else {

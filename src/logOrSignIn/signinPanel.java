@@ -5,6 +5,13 @@
 package logOrSignIn;
 
 import java.awt.Color;
+import javax.swing.SwingUtilities;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import java.sql.SQLException;
 
 /**
  *
@@ -38,7 +45,8 @@ public class signinPanel extends javax.swing.JFrame {
         emailField = new javax.swing.JTextField();
         numberField = new javax.swing.JTextField();
         addressField = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        signUpButton = new javax.swing.JButton();
+        roleChoice = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("NEW USER");
@@ -92,7 +100,7 @@ public class signinPanel extends javax.swing.JFrame {
         });
         passwordField.setEchoChar((char) 0);
         jPanel4.add(passwordField);
-        passwordField.setBounds(190, 210, 170, 30);
+        passwordField.setBounds(190, 250, 170, 30);
 
         nameField.setBackground(new java.awt.Color(220, 215, 201));
         nameField.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
@@ -153,7 +161,7 @@ public class signinPanel extends javax.swing.JFrame {
             }
         });
         jPanel4.add(numberField);
-        numberField.setBounds(30, 210, 140, 30);
+        numberField.setBounds(30, 250, 140, 30);
 
         addressField.setBackground(new java.awt.Color(220, 215, 201));
         addressField.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
@@ -172,16 +180,27 @@ public class signinPanel extends javax.swing.JFrame {
         jPanel4.add(addressField);
         addressField.setBounds(30, 90, 330, 30);
 
-        jButton1.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(220, 215, 201));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/sign-up-button.png"))); // NOI18N
-        jButton1.setText("SIGN UP");
-        jButton1.setBorder(null);
-        jButton1.setBorderPainted(false);
-        jButton1.setContentAreaFilled(false);
-        jButton1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jPanel4.add(jButton1);
-        jButton1.setBounds(120, 270, 130, 30);
+        signUpButton.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
+        signUpButton.setForeground(new java.awt.Color(220, 215, 201));
+        signUpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/sign-up-button.png"))); // NOI18N
+        signUpButton.setText("SIGN UP");
+        signUpButton.setBorder(null);
+        signUpButton.setBorderPainted(false);
+        signUpButton.setContentAreaFilled(false);
+        signUpButton.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        signUpButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                signUpButtonActionPerformed(evt);
+            }
+        });
+        jPanel4.add(signUpButton);
+        signUpButton.setBounds(120, 300, 130, 30);
+
+        roleChoice.setBackground(new java.awt.Color(220, 215, 201));
+        roleChoice.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        roleChoice.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Member", "Staff" }));
+        jPanel4.add(roleChoice);
+        roleChoice.setBounds(30, 200, 330, 30);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -269,6 +288,74 @@ public class signinPanel extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_nameFieldActionPerformed
 
+    private void signUpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signUpButtonActionPerformed
+        String name = nameField.getText().trim();
+    String address = addressField.getText().trim();
+    String email = emailField.getText().trim();
+    String role = roleChoice.getSelectedItem().toString().trim();
+    String contact = numberField.getText().trim();
+    String password = new String(passwordField.getPassword()).trim();
+
+    if (name.isEmpty() || address.isEmpty() || email.isEmpty() || role.isEmpty() || contact.isEmpty() || password.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "All fields are required!", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+        JOptionPane.showMessageDialog(this, "Invalid email format!", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    if (!contact.matches("\\d+")) {
+        JOptionPane.showMessageDialog(this, "Contact number must contain only digits!", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    if (password.length() < 6) {
+        JOptionPane.showMessageDialog(this, "Password must be at least 6 characters long!", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root"; 
+    String pass = "";  
+
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    
+    try {
+        conn = DriverManager.getConnection(url, user, pass);
+        String sql = "INSERT INTO users (name, email, password, address, contact_info, role) VALUES (?, ?, ?, ?, ?, ?)";
+        pstmt = conn.prepareStatement(sql);
+        
+        pstmt.setString(1, name);
+        pstmt.setString(2, email);
+        pstmt.setString(3, password);
+        pstmt.setString(4, address);
+        pstmt.setString(5, contact);
+        pstmt.setString(6, role);
+
+        int rowsInserted = pstmt.executeUpdate();
+        if (rowsInserted > 0) {
+            JOptionPane.showMessageDialog(this, "Sign-up successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            this.setVisible(false);  
+            loginPanel dashboard = new loginPanel();
+            dashboard.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Sign-up failed!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Database error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    } finally {
+        try {
+            if (pstmt != null) pstmt.close();
+            if (conn != null) conn.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    }//GEN-LAST:event_signUpButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -307,7 +394,6 @@ public class signinPanel extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField addressField;
     private javax.swing.JTextField emailField;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel3;
@@ -315,8 +401,7 @@ public class signinPanel extends javax.swing.JFrame {
     private javax.swing.JTextField nameField;
     private javax.swing.JTextField numberField;
     private javax.swing.JPasswordField passwordField;
-    private javax.swing.JTextField userIdField;
-    private javax.swing.JTextField userIdField1;
-    private javax.swing.JTextField userIdField2;
+    private javax.swing.JComboBox<String> roleChoice;
+    private javax.swing.JButton signUpButton;
     // End of variables declaration//GEN-END:variables
 }

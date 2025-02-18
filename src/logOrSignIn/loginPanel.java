@@ -50,6 +50,7 @@ public class loginPanel extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("LOG IN PAGE");
+        setLocationByPlatform(true);
         setPreferredSize(new java.awt.Dimension(600, 450));
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -81,7 +82,7 @@ public class loginPanel extends javax.swing.JFrame {
 
         userIdField.setBackground(new java.awt.Color(220, 215, 201));
         userIdField.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
-        userIdField.setText("Enter User ID...");
+        userIdField.setText("Enter Email...");
         userIdField.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 4, 1, 1));
         userIdField.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         userIdField.setMargin(new java.awt.Insets(2, 1, 2, 6));
@@ -92,6 +93,11 @@ public class loginPanel extends javax.swing.JFrame {
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 userIdFieldFocusLost(evt);
+            }
+        });
+        userIdField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                userIdFieldActionPerformed(evt);
             }
         });
         jPanel2.add(userIdField);
@@ -152,7 +158,7 @@ public class loginPanel extends javax.swing.JFrame {
             }
         });
         jPanel2.add(loginButton);
-        loginButton.setBounds(190, 300, 100, 40);
+        loginButton.setBounds(180, 300, 100, 40);
 
         jLabel3.setFont(new java.awt.Font("Bahnschrift", 0, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(220, 215, 201));
@@ -164,6 +170,11 @@ public class loginPanel extends javax.swing.JFrame {
         signUpButton.setBorder(null);
         signUpButton.setBorderPainted(false);
         signUpButton.setContentAreaFilled(false);
+        signUpButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                signUpButtonActionPerformed(evt);
+            }
+        });
         jPanel2.add(signUpButton);
         signUpButton.setBounds(111, 383, 70, 20);
 
@@ -188,13 +199,13 @@ public class loginPanel extends javax.swing.JFrame {
 
     private void userIdFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_userIdFieldFocusLost
         if (userIdField.getText().isEmpty()) {
-            userIdField.setText("Enter User ID...");
+            userIdField.setText("Enter Email...");
             userIdField.setForeground(Color.GRAY);
         }
     }//GEN-LAST:event_userIdFieldFocusLost
 
     private void userIdFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_userIdFieldFocusGained
-        if (userIdField.getText().equals("Enter User ID...")) {
+        if (userIdField.getText().equals("Enter Email...")) {
             userIdField.setText("");
             userIdField.setForeground(Color.BLACK);
         }
@@ -217,43 +228,52 @@ public class loginPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_passwordFieldFocusGained
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-         String email = userIdField.getText();
-    String password = new String(passwordField.getPassword());
+        String email = userIdField.getText();
+        String password = new String(passwordField.getPassword());
     
-    if (email.isEmpty() || password.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Please enter both email and password.", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    
-    String url = "jdbc:mysql://localhost:3306/lms_db";
-    String user = "root"; 
-    String pass = ""; 
-    
-    try {
-        Connection conn = DriverManager.getConnection(url, user, pass);
-        String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, email);
-        pstmt.setString(2, password);
-        
-        ResultSet rs = pstmt.executeQuery();
-        
-        if (rs.next()) {
-            JOptionPane.showMessageDialog(this, "Login successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            this.setVisible(false);  // Assuming this is in a JFrame
-            staffDashboard dashboard = new staffDashboard();
-            dashboard.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(this, "Invalid email or password.", "Error", JOptionPane.ERROR_MESSAGE);
+        if (email.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter both email and password.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-        
-        rs.close();
-        pstmt.close();
-        conn.close();
-    } catch (Exception ex) {
-        JOptionPane.showMessageDialog(this, "Database connection error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }
+    
+        String url = "jdbc:mysql://localhost:3306/lms_db";
+        String user = "root"; 
+        String pass = ""; 
+    
+        try {
+            Connection conn = DriverManager.getConnection(url, user, pass);
+            String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, email);
+            pstmt.setString(2, password);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                JOptionPane.showMessageDialog(this, "Login successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                this.setVisible(false);
+                staffDashboard dashboard = new staffDashboard();
+                dashboard.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid email or password.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+            rs.close();
+            pstmt.close();
+            conn.close();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Database connection error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_loginButtonActionPerformed
+
+    private void signUpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signUpButtonActionPerformed
+        new signinPanel().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_signUpButtonActionPerformed
+
+    private void userIdFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userIdFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_userIdFieldActionPerformed
 
     /**
      * @param args the command line arguments

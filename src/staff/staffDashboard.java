@@ -79,7 +79,7 @@ public class staffDashboard extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         jTable4 = new javax.swing.JTable();
         jPanel7 = new javax.swing.JPanel();
-        title = new javax.swing.JLabel();
+        title1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Library Management System");
@@ -88,7 +88,7 @@ public class staffDashboard extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(800, 600));
 
         jPanel1.setBackground(new java.awt.Color(44, 57, 48));
-        jPanel1.setLayout(new java.awt.GridBagLayout());
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tabbedPane.setBackground(new java.awt.Color(63, 79, 68));
         tabbedPane.setForeground(new java.awt.Color(239, 241, 238));
@@ -444,12 +444,7 @@ public class staffDashboard extends javax.swing.JFrame {
 
         tabbedPane.addTab("Loaned Books", jPanel6);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weighty = 1.3;
-        jPanel1.add(tabbedPane, gridBagConstraints);
+        jPanel1.add(tabbedPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(-1, 60, 1010, -1));
         tabbedPane.setUI(new BasicTabbedPaneUI() {
             @Override
             protected int calculateTabWidth(int tabPlacement, int tabIndex, FontMetrics metrics) {
@@ -457,17 +452,11 @@ public class staffDashboard extends javax.swing.JFrame {
             }
         });
 
-        title.setFont(new java.awt.Font("Bahnschrift", 0, 36)); // NOI18N
-        title.setForeground(new java.awt.Color(255, 255, 255));
-        title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        title.setText("LIBRARY MANAGEMENT SYSTEM DASHBOARD");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
-        gridBagConstraints.weightx = 0.1;
-        jPanel1.add(title, gridBagConstraints);
+        title1.setFont(new java.awt.Font("Bahnschrift", 0, 36)); // NOI18N
+        title1.setForeground(new java.awt.Color(255, 255, 255));
+        title1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        title1.setText("LIBRARY MANAGEMENT SYSTEM DASHBOARD");
+        jPanel1.add(title1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 999, 60));
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
@@ -613,7 +602,7 @@ public class staffDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteBookActionPerformed
 
     private void updateBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBookActionPerformed
-        int selectedRow = bookList.getSelectedRow();
+         int selectedRow = bookList.getSelectedRow();
     if (selectedRow == -1) {
         JOptionPane.showMessageDialog(this, "Please select a book to update.", "Error", JOptionPane.ERROR_MESSAGE);
         return;
@@ -641,20 +630,21 @@ public class staffDashboard extends javax.swing.JFrame {
     try (Connection conn = DriverManager.getConnection(url, user, pass);
          PreparedStatement pst = conn.prepareStatement("UPDATE books SET isbn = ?, author = ?, genre = ?, publisher = ?, publication_year = ?, quantity_available = ?, location = ? WHERE title = ?")) {
 
-        pst.setString(1, title);
+        pst.setString(1, isbn); // Update order of parameters
         pst.setString(2, author);
         pst.setString(3, genre);
         pst.setString(4, publisher);
-        pst.setInt(5, Integer.parseInt(year.trim()));
+        pst.setString(5, year);
         pst.setInt(6, Integer.parseInt(quantity));
         pst.setString(7, location);
-        pst.setString(8, isbn);
+        String selectedTitle = bookList.getValueAt(selectedRow, 0).toString(); // Assuming title is in the first column
+        pst.setString(8, selectedTitle); 
         
         int rowsUpdated = pst.executeUpdate();
         
         if (rowsUpdated > 0) {
             JOptionPane.showMessageDialog(this, "Book updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            updateBookList(); // Refresh table
+            updateBookList(); 
         } else {
             JOptionPane.showMessageDialog(this, "Failed to update book.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -664,26 +654,24 @@ public class staffDashboard extends javax.swing.JFrame {
     }
     }//GEN-LAST:event_updateBookActionPerformed
     public void fillBookDetails() {
-    int selectedRow = bookList.getSelectedRow();
-    if (selectedRow == -1) {
+        int selectedRow = bookList.getSelectedRow();
+        if (selectedRow == -1) {
         JOptionPane.showMessageDialog(this, "Please select a book first.", "Error", JOptionPane.ERROR_MESSAGE);
         return;
-    }
+        }
 
-    bookTitle.setText(bookList.getValueAt(selectedRow, 0).toString());
-    bookAuthor.setText(bookList.getValueAt(selectedRow, 1).toString());
-    bookIsbn.setText(bookList.getValueAt(selectedRow, 2).toString());
-    bookGenre.setText(bookList.getValueAt(selectedRow, 3).toString());
-    bookPublisher.setText(bookList.getValueAt(selectedRow, 4).toString());
-    bookYear.setText(bookList.getValueAt(selectedRow, 5).toString());
-    bookQuantity.setText(bookList.getValueAt(selectedRow, 6).toString());
-    bookLocation.setText(bookList.getValueAt(selectedRow, 7).toString());
+        bookTitle.setText(bookList.getValueAt(selectedRow, 0).toString());
+        bookAuthor.setText(bookList.getValueAt(selectedRow, 1).toString());
+        bookIsbn.setText(bookList.getValueAt(selectedRow, 2).toString());
+        bookGenre.setText(bookList.getValueAt(selectedRow, 3).toString());
+        bookPublisher.setText(bookList.getValueAt(selectedRow, 4).toString());
+        bookYear.setText(bookList.getValueAt(selectedRow, 5).toString());
+        bookQuantity.setText(bookList.getValueAt(selectedRow, 6).toString());
+        bookLocation.setText(bookList.getValueAt(selectedRow, 7).toString());
 }
-
-    
     private void bookListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bookListMouseClicked
-       bookList.addMouseListener(new MouseAdapter() {
-    public void mouseClicked(MouseEvent e) {
+        bookList.addMouseListener(new MouseAdapter() {
+        public void mouseClicked(MouseEvent e) {
         fillBookDetails();
     }
 });       
@@ -772,7 +760,7 @@ public class staffDashboard extends javax.swing.JFrame {
     private javax.swing.JTable jTable4;
     private javax.swing.JTable memberList;
     private javax.swing.JTabbedPane tabbedPane;
-    private javax.swing.JLabel title;
+    private javax.swing.JLabel title1;
     private javax.swing.JButton updateBook;
     // End of variables declaration//GEN-END:variables
 }

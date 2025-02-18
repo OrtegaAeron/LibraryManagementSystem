@@ -4,6 +4,9 @@
  */
 package logOrSignIn;
 
+import java.awt.Color;
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author PC
@@ -27,13 +30,180 @@ public class loginPanel extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        userIdField = new javax.swing.JTextField();
+        roleToggleButton = new javax.swing.JToggleButton();
+        role = new javax.swing.JLabel();
+        passwordField = new javax.swing.JPasswordField();
+        loginButton = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        signUpButton = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("LOG IN PAGE");
         setPreferredSize(new java.awt.Dimension(600, 450));
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
+        jPanel1.setLayout(null);
+
+        jLabel2.setBackground(new java.awt.Color(220, 215, 201));
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 52)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel2.setText("<html>LIBRARY<br>LOGIN</html>");
+        jLabel2.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        jPanel1.add(jLabel2);
+        jLabel2.setBounds(0, 10, 230, 160);
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/libraryLogin.jpg"))); // NOI18N
+        jPanel1.add(jLabel1);
+        jLabel1.setBounds(0, 0, 270, 450);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.4;
+        gridBagConstraints.weighty = 0.1;
+        getContentPane().add(jPanel1, gridBagConstraints);
+
+        jPanel2.setBackground(new java.awt.Color(63, 79, 68));
+        jPanel2.setLayout(null);
+
+        userIdField.setBackground(new java.awt.Color(220, 215, 201));
+        userIdField.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        userIdField.setText("Enter User ID...");
+        userIdField.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 4, 1, 1));
+        userIdField.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        userIdField.setMargin(new java.awt.Insets(2, 1, 2, 6));
+        userIdField.setForeground(Color.GRAY);
+        userIdField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                userIdFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                userIdFieldFocusLost(evt);
+            }
+        });
+        jPanel2.add(userIdField);
+        userIdField.setBounds(50, 180, 230, 30);
+
+        roleToggleButton.setBackground(new java.awt.Color(63, 79, 68));
+        roleToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/log-in.png"))); // NOI18N
+        roleToggleButton.setBorder(null);
+        roleToggleButton.setBorderPainted(false);
+        roleToggleButton.setContentAreaFilled(false);
+        roleToggleButton.setFocusPainted(false);
+        roleToggleButton.setFocusable(false);
+        roleToggleButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                roleToggleButtonActionPerformed(evt);
+            }
+        });
+        jPanel2.add(roleToggleButton);
+        roleToggleButton.setBounds(130, 70, 70, 70);
+
+        role.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
+        role.setForeground(new java.awt.Color(220, 215, 201));
+        role.setText("MANAGEMENT LOGIN");
+        role.setVisible(false);
+        jPanel2.add(role);
+        role.setBounds(78, 145, 180, 20);
+
+        passwordField.setBackground(new java.awt.Color(220, 215, 201));
+        passwordField.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        passwordField.setText("Enter Password...");
+        passwordField.setActionCommand("<Not Set>");
+        passwordField.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 4, 1, 1));
+        passwordField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                passwordFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                passwordFieldFocusLost(evt);
+            }
+        });
+        passwordField.setForeground(Color.GRAY);
+        passwordField.setEchoChar((char) 0);
+        jPanel2.add(passwordField);
+        passwordField.setBounds(50, 240, 230, 30);
+
+        loginButton.setFont(new java.awt.Font("Bahnschrift", 0, 20)); // NOI18N
+        loginButton.setForeground(new java.awt.Color(220, 215, 201));
+        loginButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/log-in-button.png"))); // NOI18N
+        loginButton.setText("LOGIN");
+        loginButton.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        loginButton.setBorderPainted(false);
+        loginButton.setContentAreaFilled(false);
+        loginButton.setFocusPainted(false);
+        SwingUtilities.invokeLater(() -> loginButton.requestFocusInWindow());
+        jPanel2.add(loginButton);
+        loginButton.setBounds(190, 300, 100, 40);
+
+        jLabel3.setFont(new java.awt.Font("Bahnschrift", 0, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(220, 215, 201));
+        jLabel3.setText("NO ACCOUNT YET?");
+        jPanel2.add(jLabel3);
+        jLabel3.setBounds(10, 387, 110, 15);
+
+        signUpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/sign-up.png"))); // NOI18N
+        signUpButton.setBorder(null);
+        signUpButton.setBorderPainted(false);
+        signUpButton.setContentAreaFilled(false);
+        jPanel2.add(signUpButton);
+        signUpButton.setBounds(111, 383, 70, 20);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.1;
+        getContentPane().add(jPanel2, gridBagConstraints);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void roleToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roleToggleButtonActionPerformed
+        if (roleToggleButton.isSelected()) {
+        role.setVisible(true);
+    } else {       
+        role.setVisible(false);
+    }
+    }//GEN-LAST:event_roleToggleButtonActionPerformed
+
+    private void userIdFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_userIdFieldFocusLost
+        if (userIdField.getText().isEmpty()) {
+            userIdField.setText("Enter User ID...");
+            userIdField.setForeground(Color.GRAY);
+        }
+    }//GEN-LAST:event_userIdFieldFocusLost
+
+    private void userIdFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_userIdFieldFocusGained
+        if (userIdField.getText().equals("Enter User ID...")) {
+            userIdField.setText("");
+            userIdField.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_userIdFieldFocusGained
+
+    private void passwordFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passwordFieldFocusLost
+        if (passwordField.getPassword().length == 0) {
+            passwordField.setText("Enter Password...");
+            passwordField.setForeground(Color.GRAY);
+            passwordField.setEchoChar((char) 0);
+        }
+    }//GEN-LAST:event_passwordFieldFocusLost
+
+    private void passwordFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passwordFieldFocusGained
+        if (String.valueOf(passwordField.getPassword()).equals("Enter Password...")) {
+            passwordField.setText("");
+            passwordField.setForeground(Color.BLACK);
+            passwordField.setEchoChar('•');
+        }
+    }//GEN-LAST:event_passwordFieldFocusGained
 
     /**
      * @param args the command line arguments
@@ -71,5 +241,16 @@ public class loginPanel extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JButton loginButton;
+    private javax.swing.JPasswordField passwordField;
+    private javax.swing.JLabel role;
+    private javax.swing.JToggleButton roleToggleButton;
+    private javax.swing.JButton signUpButton;
+    private javax.swing.JTextField userIdField;
     // End of variables declaration//GEN-END:variables
 }

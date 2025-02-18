@@ -37,12 +37,16 @@ public class staffDashboard extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
+        jButton2 = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTable4 = new javax.swing.JTable();
@@ -58,12 +62,15 @@ public class staffDashboard extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(44, 57, 48));
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        tabbedPane.setBackground(new java.awt.Color(105, 117, 101));
+        tabbedPane.setBackground(new java.awt.Color(63, 79, 68));
+        tabbedPane.setForeground(new java.awt.Color(239, 241, 238));
         tabbedPane.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         tabbedPane.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
 
         jPanel2.setBackground(new java.awt.Color(220, 215, 201));
         jPanel2.setLayout(new java.awt.GridBagLayout());
+
+        jPanel9.setBackground(new java.awt.Color(220, 215, 201));
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -77,8 +84,7 @@ public class staffDashboard extends javax.swing.JFrame {
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel2.add(jPanel9, gridBagConstraints);
 
         jTable1.setBackground(new java.awt.Color(220, 215, 201));
@@ -135,6 +141,21 @@ public class staffDashboard extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(220, 215, 201));
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
+        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane5.setViewportView(jList1);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        jPanel3.add(jScrollPane5, gridBagConstraints);
+
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -149,10 +170,20 @@ public class staffDashboard extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTable2);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BELOW_BASELINE_TRAILING;
         gridBagConstraints.weightx = 0.2;
         gridBagConstraints.weighty = 0.3;
+        gridBagConstraints.insets = new java.awt.Insets(13, 13, 13, 13);
         jPanel3.add(jScrollPane2, gridBagConstraints);
+
+        jButton1.setText("jButton1");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.weightx = 0.4;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        jPanel3.add(jButton1, gridBagConstraints);
 
         tabbedPane.addTab("Book List", jPanel3);
 
@@ -173,6 +204,7 @@ public class staffDashboard extends javax.swing.JFrame {
         jScrollPane3.setViewportView(jTable3);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BELOW_BASELINE_TRAILING;
         gridBagConstraints.weightx = 0.2;
         gridBagConstraints.weighty = 0.3;
@@ -180,6 +212,13 @@ public class staffDashboard extends javax.swing.JFrame {
 
         jPanel5.setLayout(new java.awt.GridBagLayout());
         jPanel4.add(jPanel5, new java.awt.GridBagConstraints());
+
+        jButton2.setText("jButton2");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 6, 6);
+        jPanel4.add(jButton2, gridBagConstraints);
 
         tabbedPane.addTab("Members", jPanel4);
 
@@ -214,7 +253,6 @@ public class staffDashboard extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 1.3;
         jPanel1.add(tabbedPane, gridBagConstraints);
         tabbedPane.setUI(new BasicTabbedPaneUI() {
@@ -277,6 +315,9 @@ public class staffDashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -289,6 +330,7 @@ public class staffDashboard extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;

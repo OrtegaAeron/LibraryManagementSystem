@@ -4,6 +4,7 @@
  */
 package staff;
 
+import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -27,6 +28,12 @@ public class staffDashboard extends javax.swing.JFrame {
      */
     public staffDashboard() {
         initComponents();
+        
+        memberList.getSelectionModel().addListSelectionListener(e -> {
+        if (!e.getValueIsAdjusting()) {
+            populateFieldsFromTable();
+        }
+    });
     }
 
     /**
@@ -47,7 +54,7 @@ public class staffDashboard extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        listBook = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         bookList = new javax.swing.JTable();
         addBook = new javax.swing.JButton();
@@ -69,23 +76,36 @@ public class staffDashboard extends javax.swing.JFrame {
         bookYear = new javax.swing.JTextField();
         bookQuantity = new javax.swing.JTextField();
         bookLocation = new javax.swing.JTextField();
-        jPanel4 = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        memberList = new javax.swing.JTable();
-        jPanel5 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTable4 = new javax.swing.JTable();
         jPanel7 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        memberList = new javax.swing.JTable();
+        jPanel5 = new javax.swing.JPanel();
+        deleteUser = new javax.swing.JButton();
+        updateUser = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        memberName = new javax.swing.JTextField();
+        memberEmail = new javax.swing.JTextField();
+        memberPassword = new javax.swing.JTextField();
+        memberAddress = new javax.swing.JTextField();
+        memberContact = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        memberRole = new javax.swing.JComboBox<>();
+        addUser = new javax.swing.JButton();
         title1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Library Management System");
         setBackground(new java.awt.Color(44, 57, 48));
         setLocationByPlatform(true);
-        setPreferredSize(new java.awt.Dimension(800, 600));
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(44, 57, 48));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -168,12 +188,12 @@ public class staffDashboard extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(220, 215, 201));
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+        listBook.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane5.setViewportView(jList1);
+        jScrollPane5.setViewportView(listBook);
 
         bookList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -230,6 +250,14 @@ public class staffDashboard extends javax.swing.JFrame {
 
         jLabel8.setText("Location:");
 
+        bookTitle.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                bookTitleFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                bookTitleFocusLost(evt);
+            }
+        });
         bookTitle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bookTitleActionPerformed(evt);
@@ -281,21 +309,22 @@ public class staffDashboard extends javax.swing.JFrame {
                                             .addComponent(bookYear)
                                             .addComponent(bookQuantity, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)))))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(170, 170, 170)
-                        .addComponent(jLabel4)
-                        .addGap(7, 7, 7)
-                        .addComponent(bookGenre, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(155, 155, 155)
-                        .addComponent(jLabel5)
-                        .addGap(6, 6, 6)
-                        .addComponent(bookPublisher, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(155, 155, 155)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(170, 170, 170)
+                                .addComponent(jLabel4)
+                                .addGap(7, 7, 7)
+                                .addComponent(bookGenre, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(155, 155, 155)
+                                .addComponent(jLabel5)
+                                .addGap(6, 6, 6)
+                                .addComponent(bookPublisher, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(addBook)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(deleteBook)
-                        .addGap(6, 6, 6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(updateBook)))
                 .addGap(14, 14, 14))
         );
@@ -338,87 +367,32 @@ public class staffDashboard extends javax.swing.JFrame {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(bookLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8))))
-                .addGap(4, 4, 4)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(4, 4, 4)
-                        .addComponent(jLabel4))
-                    .addComponent(bookGenre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(6, 6, 6)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addComponent(jLabel4))
+                            .addComponent(bookGenre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(6, 6, 6)
-                        .addComponent(jLabel5))
-                    .addComponent(bookPublisher, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(11, 11, 11)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(deleteBook)
-                        .addComponent(addBook))
-                    .addComponent(updateBook)))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(jLabel5))
+                            .addComponent(bookPublisher, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(addBook)
+                            .addComponent(deleteBook)
+                            .addComponent(updateBook))))
+                .addGap(34, 34, 34))
         );
 
         tabbedPane.addTab("Book List", jPanel3);
 
-        jPanel4.setBackground(new java.awt.Color(220, 215, 201));
-
-        memberList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "Name", "Email", "Password", "Address", "Contact Info"
-            }
-        ));
-        jScrollPane3.setViewportView(memberList);
-
-        jPanel5.setLayout(new java.awt.GridBagLayout());
-
-        jButton2.setText("DELETE MEMBER");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jButton3.setText("UPDATE MEMBER");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 999, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 611, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(6, 6, 6)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)))
-        );
-
-        tabbedPane.addTab("Members", jPanel4);
-
         jPanel6.setBackground(new java.awt.Color(220, 215, 201));
-        jPanel6.setLayout(new java.awt.GridBagLayout());
 
         jTable4.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -433,18 +407,122 @@ public class staffDashboard extends javax.swing.JFrame {
         ));
         jScrollPane4.setViewportView(jTable4);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BELOW_BASELINE_TRAILING;
-        gridBagConstraints.weightx = 0.2;
-        gridBagConstraints.weighty = 0.3;
-        jPanel6.add(jScrollPane4, gridBagConstraints);
-
         jPanel7.setLayout(new java.awt.GridBagLayout());
-        jPanel6.add(jPanel7, new java.awt.GridBagConstraints());
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(258, 258, 258)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(300, 300, 300))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         tabbedPane.addTab("Loaned Books", jPanel6);
 
-        jPanel1.add(tabbedPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(-1, 60, 1010, -1));
+        jPanel4.setBackground(new java.awt.Color(220, 215, 201));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        memberList.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "Name", "Role", "Email", "Password", "Address", "Contact Info"
+            }
+        ));
+        memberList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                memberListMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(memberList);
+
+        jPanel4.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 652, 600));
+
+        jPanel5.setLayout(new java.awt.GridBagLayout());
+        jPanel4.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 492, -1, -1));
+
+        deleteUser.setText("DELETE ");
+        deleteUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteUserActionPerformed(evt);
+            }
+        });
+        jPanel4.add(deleteUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 100, -1, -1));
+
+        updateUser.setText("UPDATE ");
+        updateUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateUserActionPerformed(evt);
+            }
+        });
+        jPanel4.add(updateUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 130, 80, -1));
+
+        jLabel9.setText("Name:");
+        jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 30, 37, -1));
+
+        jLabel10.setText("Email:");
+        jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 70, 37, -1));
+
+        jLabel11.setText("Password:");
+        jPanel4.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 110, -1, -1));
+
+        jLabel12.setText("Address:");
+        jPanel4.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 150, -1, -1));
+
+        jLabel13.setText("Contact:");
+        jPanel4.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 190, -1, -1));
+
+        memberName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                memberNameActionPerformed(evt);
+            }
+        });
+        jPanel4.add(memberName, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 30, 100, -1));
+        jPanel4.add(memberEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 70, 100, -1));
+        jPanel4.add(memberPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 110, 100, -1));
+
+        memberAddress.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                memberAddressActionPerformed(evt);
+            }
+        });
+        jPanel4.add(memberAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 150, 100, -1));
+        jPanel4.add(memberContact, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 190, 100, -1));
+
+        jLabel14.setText("Role:");
+        jPanel4.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 30, -1, -1));
+
+        memberRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin", "Member" }));
+        jPanel4.add(memberRole, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 30, 100, -1));
+
+        addUser.setText("ADD");
+        addUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addUserActionPerformed(evt);
+            }
+        });
+        jPanel4.add(addUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 70, -1, -1));
+
+        tabbedPane.addTab("Users", jPanel4);
+
+        jPanel1.add(tabbedPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 1010, -1));
         tabbedPane.setUI(new BasicTabbedPaneUI() {
             @Override
             protected int calculateTabWidth(int tabPlacement, int tabIndex, FontMetrics metrics) {
@@ -458,7 +536,7 @@ public class staffDashboard extends javax.swing.JFrame {
         title1.setText("LIBRARY MANAGEMENT SYSTEM DASHBOARD");
         jPanel1.add(title1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 999, 60));
 
-        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -676,15 +754,219 @@ public class staffDashboard extends javax.swing.JFrame {
     }
 });       
     }//GEN-LAST:event_bookListMouseClicked
+    private void populateFieldsFromTable() {
+    int selectedRow = memberList.getSelectedRow();
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a user to update.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+    memberName.setText(memberList.getValueAt(selectedRow, 0).toString());
+    memberRole.setSelectedItem(memberList.getValueAt(selectedRow, 1).toString());
+    memberEmail.setText(memberList.getValueAt(selectedRow, 2).toString());
+    memberPassword.setText(memberList.getValueAt(selectedRow, 3).toString());
+    memberAddress.setText(memberList.getValueAt(selectedRow, 4).toString());
+    memberContact.setText(memberList.getValueAt(selectedRow, 5).toString());
+}
+    private void updateUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateUserActionPerformed
+    int selectedRow = memberList.getSelectedRow();
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a user to update.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    String originalName = memberList.getValueAt(selectedRow, 0).toString(); 
+    String name = memberName.getText();
+    String email = memberEmail.getText();
+    String password = memberPassword.getText();
+    String address = memberAddress.getText();
+    String contact = memberContact.getText();
+    String role = memberRole.getSelectedItem().toString();
+
+    String updateUserSql = "UPDATE users SET name = ?, email = ?, password = ?, address = ?, contact_info = ?, role = ? WHERE name = ?";
+
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+
+    try (Connection conn = DriverManager.getConnection(url, user, pass);
+         PreparedStatement pst = conn.prepareStatement(updateUserSql)) {
+
+        pst.setString(1, name);
+        pst.setString(2, email);
+        pst.setString(3, password);
+        pst.setString(4, address);
+        pst.setString(5, contact);
+        pst.setString(6, role);
+        pst.setString(7, originalName); // Use original name for WHERE clause
+
+        int rowsUpdated = pst.executeUpdate();
+
+        if (rowsUpdated > 0) {
+            JOptionPane.showMessageDialog(this, "User updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            updateMemberList();
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to update user.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_updateUserActionPerformed
+
+    private void bookTitleFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_bookTitleFocusGained
+       
+    }//GEN-LAST:event_bookTitleFocusGained
+
+    private void bookTitleFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_bookTitleFocusLost
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_bookTitleFocusLost
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void memberNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_memberNameActionPerformed
 
+    private void deleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserActionPerformed
+            int selectedRow = memberList.getSelectedRow();
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a user to delete.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+    String selectedName = memberList.getValueAt(selectedRow, 0).toString(); // Get selected name
+    
+    int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this user?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+    if (confirm != JOptionPane.YES_OPTION) {
+        return;
+    }
+    
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+    
+    String deleteUserSql = "DELETE FROM users WHERE name = ?";
+    
+    try (Connection conn = DriverManager.getConnection(url, user, pass);
+         PreparedStatement pst = conn.prepareStatement(deleteUserSql)) {
+        
+        pst.setString(1, selectedName);
+        int rowsDeleted = pst.executeUpdate();
+        
+        if (rowsDeleted > 0) {
+            JOptionPane.showMessageDialog(this, "User deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            updateMemberList();
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to delete user.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_deleteUserActionPerformed
+    
+
+private void updateMemberList() {
+    DefaultTableModel model = (DefaultTableModel) memberList.getModel();
+    model.setRowCount(0); // Clear existing data
+    
+    String fetchUsersSql = "SELECT name, role, email, password, address, contact_info FROM users";
+    
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+    try (Connection conn = DriverManager.getConnection(url, user, pass);
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(fetchUsersSql)) {
+        
+        while (rs.next()) {
+            String name = rs.getString("name");
+            String role = rs.getString("role");
+            String email = rs.getString("email");
+            String password = rs.getString("password");
+            String address = rs.getString("address");
+            String contact = rs.getString("contact_info");
+            
+            model.addRow(new Object[]{name, role, email, password, address, contact});
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error updating member list: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+    private void addUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserActionPerformed
+            String name = memberName.getText();
+            String email = memberEmail.getText();
+            String password = memberPassword.getText();
+            String address = memberAddress.getText();
+            String contact = memberContact.getText();
+            String role = memberRole.getSelectedItem().toString();
+
+if (name.isEmpty() || email.isEmpty() || password.isEmpty() || address.isEmpty() || contact.isEmpty() || role.isEmpty()) {
+    JOptionPane.showMessageDialog(this, "All fields must be filled out.", "Error", JOptionPane.ERROR_MESSAGE);
+    return;
+}
+
+String url = "jdbc:mysql://localhost:3306/lms_db";
+String user = "root";
+String pass = "";
+
+Connection conn = null;
+PreparedStatement pst = null;
+
+String insertUserSql = "INSERT INTO users (name, email, password, address, contact_info, role) VALUES (?, ?, ?, ?, ?, ?)";
+
+try {
+    Class.forName("com.mysql.cj.jdbc.Driver");
+    conn = DriverManager.getConnection(url, user, pass);
+    pst = conn.prepareStatement(insertUserSql);
+    
+    pst.setString(1, name);
+    pst.setString(2, email);
+    pst.setString(3, password);
+    pst.setString(4, address);
+    pst.setString(5, contact);
+    pst.setString(6, role);
+    
+    int rowsInserted = pst.executeUpdate();
+    
+    if (rowsInserted > 0) {
+        memberName.setText("");
+        memberEmail.setText("");
+        memberPassword.setText("");
+        memberAddress.setText("");
+        memberContact.setText("");
+        memberRole.setSelectedIndex(0); // Reset combo box
+        
+        JOptionPane.showMessageDialog(this, "User added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        updateMemberList();
+    } else {
+        JOptionPane.showMessageDialog(this, "Failed to add user.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+} catch (SQLException e) {
+    e.printStackTrace();
+    JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+} catch (ClassNotFoundException e) {
+    e.printStackTrace();
+    JOptionPane.showMessageDialog(this, "Driver not found: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+} finally {
+    try {
+        if (pst != null) pst.close();
+        if (conn != null) conn.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+    }//GEN-LAST:event_addUserActionPerformed
+
+    private void memberListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_memberListMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_memberListMouseClicked
+
+    private void memberAddressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberAddressActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_memberAddressActionPerformed
+        
     /**
      * @param args the command line arguments
      */
@@ -722,6 +1004,7 @@ public class staffDashboard extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBook;
+    private javax.swing.JButton addUser;
     private javax.swing.JTextField bookAuthor;
     private javax.swing.JTextField bookGenre;
     private javax.swing.JTextField bookIsbn;
@@ -732,9 +1015,13 @@ public class staffDashboard extends javax.swing.JFrame {
     private javax.swing.JTextField bookTitle;
     private javax.swing.JTextField bookYear;
     private javax.swing.JButton deleteBook;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton deleteUser;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -742,7 +1029,7 @@ public class staffDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JList<String> jList1;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -758,9 +1045,17 @@ public class staffDashboard extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable4;
+    private javax.swing.JList<String> listBook;
+    private javax.swing.JTextField memberAddress;
+    private javax.swing.JTextField memberContact;
+    private javax.swing.JTextField memberEmail;
     private javax.swing.JTable memberList;
+    private javax.swing.JTextField memberName;
+    private javax.swing.JTextField memberPassword;
+    private javax.swing.JComboBox<String> memberRole;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JLabel title1;
     private javax.swing.JButton updateBook;
+    private javax.swing.JButton updateUser;
     // End of variables declaration//GEN-END:variables
 }

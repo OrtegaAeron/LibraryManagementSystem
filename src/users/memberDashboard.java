@@ -25,8 +25,7 @@ public class memberDashboard extends javax.swing.JFrame {
     public memberDashboard(String email) {
         this.email = email;
         initComponents();
-        loadToTables();
-        loadLocationsIntoComboBox();
+        loadToTables("ORDER BY ");
     }
 
     public String userName(String email) {
@@ -45,7 +44,233 @@ public class memberDashboard extends javax.swing.JFrame {
         }
         return name;
     }
-    
+    public void loadToTables(String sortBy) {
+        DefaultTableModel model = (DefaultTableModel) browseTable.getModel();
+        model.setRowCount(0);
+        String url = "jdbc:mysql://localhost:3306/lms_db";
+        String user = "root";
+        String pass = "";
+        String validSortColumn;
+        switch (sortBy.toLowerCase()) {
+            case "title":
+            case "author":
+            case "genre":
+            case "publication_year":
+            case "location":
+                validSortColumn = sortBy;
+                break;
+            default:
+                validSortColumn = "title"; 
+        }
+
+        String fetchBooksSql = "SELECT b.title, b.author, b.genre, b.publication_year, b.location FROM books b ORDER BY " + validSortColumn;
+
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(fetchBooksSql)) {
+
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getString("title"),
+                    rs.getString("author"),
+                    rs.getString("genre"),
+                    rs.getInt("publication_year"),
+                    rs.getString("location")
+                });
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error refreshing book list: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    private void loadMostBorrowedBooks() {
+        DefaultTableModel model = (DefaultTableModel) browseTable.getModel();
+        model.setRowCount(0);
+
+        String url = "jdbc:mysql://localhost:3306/lms_db";
+        String user = "root";
+        String pass = "";
+
+        String fetchMostBorrowedSql = 
+            "SELECT b.title, b.author, b.genre, b.publication_year, b.location, " +
+            "(SELECT COUNT(br.book_id) FROM borrow_records br WHERE br.book_id = b.book_id) AS borrow_count " +
+            "FROM books b " +
+            "JOIN borrow_records br ON b.book_id = br.book_id " +
+            "GROUP BY b.book_id, b.title, b.author, b.genre, b.publication_year, b.location " +
+            "ORDER BY borrow_count DESC";
+
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(fetchMostBorrowedSql)) {
+
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getString("title"),
+                    rs.getString("author"),
+                    rs.getString("genre"),
+                    rs.getInt("publication_year"),
+                    rs.getString("location")
+                });
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error loading most borrowed books: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    private void searchAndSort(String searchText, String sortBy) {
+        DefaultTableModel model = (DefaultTableModel) browseTable.getModel();
+        model.setRowCount(0); // Clear the table before searching
+
+        String url = "jdbc:mysql://localhost:3306/lms_db";
+        String user = "root";
+        String pass = "";
+
+        // Validate and sanitize sortBy to prevent SQL Injection
+        String validSortColumn;
+        switch (sortBy.toLowerCase()) {
+            case "title":
+            case "author":
+            case "genre":
+            case "publication_year":
+            case "location":
+                validSortColumn = sortBy;
+                break;
+            default:
+                validSortColumn = "title"; // Default sorting column
+        }
+
+        // SQL query to search books and sort results
+        String searchQuery = "SELECT title, author, genre, publication_year, location FROM books " +
+                             "WHERE title LIKE ? OR author LIKE ? OR genre LIKE ? " +
+                             "ORDER BY " + validSortColumn;
+
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             PreparedStatement pst = conn.prepareStatement(searchQuery)) {
+
+            String searchPattern = "%" + searchText.trim() + "%";
+            pst.setString(1, searchPattern);
+            pst.setString(2, searchPattern);
+            pst.setString(3, searchPattern);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    model.addRow(new Object[]{
+                        rs.getString("title"),
+                        rs.getString("author"),
+                        rs.getString("genre"),
+                        rs.getInt("publication_year"), // Use getInt() for better handling
+                        rs.getString("location")
+                    });
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error searching books: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    private void searchAndSortWithDate(String searchText, String sortBy, Date fromDate, Date toDate) {
+        DefaultTableModel model = (DefaultTableModel) browseTable.getModel();
+        model.setRowCount(0);
+
+        String url = "jdbc:mysql://localhost:3306/lms_db";
+        String user = "root";
+        String pass = "";
+
+        String validSortColumn;
+        switch (sortBy.toLowerCase()) {
+            case "title":
+            case "author":
+            case "genre":
+            case "publication_year":
+            case "location":
+                validSortColumn = sortBy;
+                break;
+            default:
+                validSortColumn = "title";
+        }
+
+        String searchQuery = "SELECT b.title, b.author, b.genre, b.publication_year, b.location " +
+                             "FROM books b " +
+                             "LEFT JOIN reservations r ON b.book_id = r.book_id " +
+                             "WHERE (title LIKE ? OR author LIKE ? OR genre LIKE ?) " +
+                             "AND (r.status = 'available' OR r.reservation_id IS NULL " +
+                             "     OR NOT (r.reservation_date <= ? AND r.reservation_end_date >= ?)) " +
+                             "ORDER BY " + validSortColumn;
+
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             PreparedStatement pst = conn.prepareStatement(searchQuery)) {
+
+            String searchPattern = "%" + searchText.trim() + "%";
+            pst.setString(1, searchPattern);
+            pst.setString(2, searchPattern);
+            pst.setString(3, searchPattern);
+
+            java.sql.Date sqlFromDate = new java.sql.Date(fromDate.getTime());
+            java.sql.Date sqlToDate = new java.sql.Date(toDate.getTime());
+
+            pst.setDate(4, sqlToDate);
+            pst.setDate(5, sqlFromDate);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    model.addRow(new Object[]{
+                        rs.getString("title"),
+                        rs.getString("author"),
+                        rs.getString("genre"),
+                        rs.getInt("publication_year"),
+                        rs.getString("location")
+                    });
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error searching books: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    public void insertReservation(int userId, String title, String author, String genre, java.sql.Date reservationDate, java.sql.Date reservationEndDate) {
+        String url = "jdbc:mysql://localhost:3306/lms_db";
+        String user = "root";
+        String pass = "";
+
+        String getBookIdQuery = "SELECT book_id FROM books WHERE title = ? AND author = ? AND genre = ?";
+        String insertReservationQuery = "INSERT INTO reservations (user_id, book_id, reservation_date, reservation_end_date, status) VALUES (?, ?, ?, ?, 'Pending')";
+
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             PreparedStatement getBookStmt = conn.prepareStatement(getBookIdQuery);
+             PreparedStatement insertReservationStmt = conn.prepareStatement(insertReservationQuery)) {
+
+            getBookStmt.setString(1, title);
+            getBookStmt.setString(2, author);
+            getBookStmt.setString(3, genre);
+
+            ResultSet rs = getBookStmt.executeQuery();
+
+            if (rs.next()) {
+                int bookId = rs.getInt("book_id");
+
+                insertReservationStmt.setInt(1, userId);
+                insertReservationStmt.setInt(2, bookId);
+                insertReservationStmt.setDate(3, reservationDate);
+                insertReservationStmt.setDate(4, reservationEndDate);
+
+                int rowsAffected = insertReservationStmt.executeUpdate();
+                if (rowsAffected > 0) {
+                    JOptionPane.showMessageDialog(null, "Reservation successfully added!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Failed to insert reservation.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Book not found!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error inserting reservation: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -80,9 +305,9 @@ public class memberDashboard extends javax.swing.JFrame {
         searchField = new javax.swing.JTextField();
         sortByBox = new javax.swing.JComboBox<>();
         reserveButton = new javax.swing.JButton();
-        toDate = new com.toedter.calendar.JDateChooser();
+        toDateChooser = new com.toedter.calendar.JDateChooser();
         jLabel12 = new javax.swing.JLabel();
-        fromDate = new com.toedter.calendar.JDateChooser();
+        fromDateChooser = new com.toedter.calendar.JDateChooser();
         jLabel15 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
@@ -274,18 +499,18 @@ public class memberDashboard extends javax.swing.JFrame {
         browseTable.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         browseTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title", "Authors", "Genre", "Location"
+                "Title", "Authors", "Genre", "Year Published", "Location"
             }
         ));
         jScrollPane4.setViewportView(browseTable);
 
-        jPanel3.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 34, 692, 493));
+        jPanel3.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 34, 770, 493));
 
         searchField.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         searchField.setForeground(new java.awt.Color(153, 153, 153));
@@ -298,30 +523,41 @@ public class memberDashboard extends javax.swing.JFrame {
                 searchFieldFocusLost(evt);
             }
         });
-        searchField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchFieldActionPerformed(evt);
+        searchField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchFieldKeyReleased(evt);
             }
         });
         jPanel3.add(searchField, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 0, 580, 30));
 
+        sortByBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sort by Year", "Sort by Title", "Sort by Author", "Sort by Genre", "Sort by Popularity" }));
         sortByBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sortByBoxActionPerformed(evt);
             }
         });
+        sortByBox.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                sortByBoxPropertyChange(evt);
+            }
+        });
         jPanel3.add(sortByBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(604, 0, 190, 30));
 
         reserveButton.setText("RESERVE");
-        jPanel3.add(reserveButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 200, 125, -1));
-        jPanel3.add(toDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 140, 220, 30));
+        reserveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reserveButtonActionPerformed(evt);
+            }
+        });
+        jPanel3.add(reserveButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 200, 125, -1));
+        jPanel3.add(toDateChooser, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 140, 220, 30));
 
         jLabel12.setText("TO DATE:");
-        jPanel3.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 120, -1, -1));
-        jPanel3.add(fromDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 80, 220, 30));
+        jPanel3.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 120, -1, -1));
+        jPanel3.add(fromDateChooser, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 80, 220, 30));
 
         jLabel15.setText("FROM DATE:");
-        jPanel3.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 60, -1, -1));
+        jPanel3.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 60, -1, -1));
 
         jTabbedPane1.addTab("Browse Books and Reserve", jPanel3);
 
@@ -386,144 +622,72 @@ public class memberDashboard extends javax.swing.JFrame {
             searchField.setForeground(Color.GRAY);
         }
     }//GEN-LAST:event_searchFieldFocusLost
-    public void loadToTables(){
-        DefaultTableModel model = (DefaultTableModel) browseTable.getModel();
-    model.setRowCount(0); // Clear existing data
-
-    String url = "jdbc:mysql://localhost:3306/lms_db";
-    String user = "root";
-    String pass = "";
-
-    String fetchBooksSql = "SELECT title, author, genre, location FROM books";
-
-    try (Connection conn = DriverManager.getConnection(url, user, pass);
-         Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery(fetchBooksSql)) {
-        
-        while (rs.next()) {
-            model.addRow(new Object[]{
-                rs.getString("title"),
-                rs.getString("author"),
-                rs.getString("genre"),
-                rs.getString("location")
-            });
-        }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error refreshing book list: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }
-    };
-    
-    private void loadLocationsIntoComboBox() {
-    sortByBox.removeAllItems(); // Clear previous items
-    sortByBox.addItem("All Locations"); // Default option
-
-    String url = "jdbc:mysql://localhost:3306/lms_db";
-    String user = "root";
-    String pass = "";
-    String query = "SELECT DISTINCT location FROM books WHERE location IS NOT NULL AND location != ''";
-
-    try (Connection conn = DriverManager.getConnection(url, user, pass);
-         Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery(query)) {
-
-        boolean hasData = false;
-        while (rs.next()) {
-            String location = rs.getString("location");
-            sortByBox.addItem(location);
-            hasData = true;
-        }
-
-        if (!hasData) {
-            JOptionPane.showMessageDialog(this, "No locations found in the database.", "Info", JOptionPane.INFORMATION_MESSAGE);
-        }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error loading locations: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }
-}
-
-    private void searchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchFieldActionPerformed
-        String searchText = searchField.getText().trim();
-    DefaultTableModel model = (DefaultTableModel) browseTable.getModel();
-    model.setRowCount(0); // Clear the table before searching
-
-    String url = "jdbc:mysql://localhost:3306/lms_db";
-    String user = "root";
-    String pass = "";
-
-    // SQL query to search for books by title, author, or genre
-    String searchQuery = "SELECT title, author, genre, location FROM books " +
-                         "WHERE title LIKE ? OR author LIKE ? OR genre LIKE ?";
-
-    try (Connection conn = DriverManager.getConnection(url, user, pass);
-         PreparedStatement pst = conn.prepareStatement(searchQuery)) {
-        
-        String searchPattern = "%" + searchText + "%";
-        pst.setString(1, searchPattern);
-        pst.setString(2, searchPattern);
-        pst.setString(3, searchPattern);
-
-        try (ResultSet rs = pst.executeQuery()) {
-            while (rs.next()) {
-                model.addRow(new Object[]{
-                    rs.getString("title"),
-                    rs.getString("author"),
-                    rs.getString("genre"),
-                    rs.getString("location")
-                });
-            }
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error searching books: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }
-    }//GEN-LAST:event_searchFieldActionPerformed
        
     private void sortByBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortByBoxActionPerformed
-        String selectedLocation = sortByBox.getSelectedItem().toString();
-    DefaultTableModel model = (DefaultTableModel) browseTable.getModel();
-    model.setRowCount(0); // Clear table before filtering
-
-    String url = "jdbc:mysql://localhost:3306/lms_db";
-    String user = "root";
-    String pass = "";
-
-    String query = "SELECT title, author, genre, location FROM books";
-    if (!selectedLocation.equals("All Locations")) {
-        query += " WHERE location = ?";
-    }
-
-    try (Connection conn = DriverManager.getConnection(url, user, pass);
-         PreparedStatement pst = conn.prepareStatement(query)) {
-        
-        if (!selectedLocation.equals("All Locations")) {
-            pst.setString(1, selectedLocation);
+        int index = sortByBox.getSelectedIndex();
+        switch (index) {
+            case 0:
+                loadToTables("publication_year");
+                break;
+            case 1:
+                loadToTables("title");
+                break;
+            case 2:
+                loadToTables("author");
+                break;
+            case 3:
+                loadToTables("genre");
+                break;
+            case 4:
+                loadMostBorrowedBooks();
+                break;
+            default:
+                loadToTables("title");
         }
-
-        try (ResultSet rs = pst.executeQuery()) {
-            while (rs.next()) {
-                model.addRow(new Object[]{
-                    rs.getString("title"),
-                    rs.getString("author"),
-                    rs.getString("genre"),
-                    rs.getString("location")
-                });
-            }
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error filtering books: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }
-    
-    sortByBox.addActionListener(new ActionListener() {
-    public void actionPerformed(ActionEvent evt) {
-        sortByBoxActionPerformed(evt);
-    }
-});
     }//GEN-LAST:event_sortByBoxActionPerformed
+
+    private void sortByBoxPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_sortByBoxPropertyChange
+        
+    }//GEN-LAST:event_sortByBoxPropertyChange
+
+    private void searchFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchFieldKeyReleased
+        java.util.Date fromDate = fromDateChooser.getDate();
+        java.util.Date toDate = toDateChooser.getDate();
+
+        if (fromDate == null || toDate == null) { 
+            if (fromDate == null && toDate == null) { 
+                searchAndSort(searchField.getText(), sortByBox.getSelectedItem().toString());
+            } else { 
+                JOptionPane.showMessageDialog(null, "Please select both start and end dates.", "Warning", JOptionPane.WARNING_MESSAGE);
+            }
+        } else {
+            java.sql.Date sqlFromDate = new java.sql.Date(fromDate.getTime());
+            java.sql.Date sqlToDate = new java.sql.Date(toDate.getTime());
+            searchAndSortWithDate(searchField.getText(), sortByBox.getSelectedItem().toString(), sqlFromDate, sqlToDate);
+        }
+
+    }//GEN-LAST:event_searchFieldKeyReleased
+
+    private void reserveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reserveButtonActionPerformed
+        int selectedRow = browseTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(null, "Please select a book to reserve.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String selectedTitle = browseTable.getValueAt(selectedRow, 0).toString();
+        String selectedAuthor = browseTable.getValueAt(selectedRow, 1).toString();
+        String selectedGenre = browseTable.getValueAt(selectedRow, 2).toString();
+        if (fromDateChooser.getDate() == null || toDateChooser.getDate() == null) {
+            JOptionPane.showMessageDialog(null, "Please select both start and end dates.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        java.sql.Date sqlFromDate = new java.sql.Date(fromDateChooser.getDate().getTime());
+        java.sql.Date sqlToDate = new java.sql.Date(toDateChooser.getDate().getTime());
+        insertReservation(userId, selectedTitle, selectedAuthor, selectedGenre, sqlFromDate, sqlToDate);
+        
+        fromDateChooser.setDate(null);
+        toDateChooser.setDate(null);
+    }//GEN-LAST:event_reserveButtonActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -561,7 +725,7 @@ public class memberDashboard extends javax.swing.JFrame {
     private javax.swing.JButton alertButton;
     private javax.swing.JList<String> borrowedList;
     private javax.swing.JTable browseTable;
-    private com.toedter.calendar.JDateChooser fromDate;
+    private com.toedter.calendar.JDateChooser fromDateChooser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -592,7 +756,7 @@ public class memberDashboard extends javax.swing.JFrame {
     private javax.swing.JButton reserveButton;
     private javax.swing.JTextField searchField;
     private javax.swing.JComboBox<String> sortByBox;
-    private com.toedter.calendar.JDateChooser toDate;
+    private com.toedter.calendar.JDateChooser toDateChooser;
     private javax.swing.JList<String> upcomingDues;
     private javax.swing.JLabel welcomeMsg;
     // End of variables declaration//GEN-END:variables

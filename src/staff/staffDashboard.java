@@ -15,6 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 /**
@@ -188,11 +189,6 @@ public class staffDashboard extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(220, 215, 201));
 
-        listBook.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane5.setViewportView(listBook);
 
         bookList.setModel(new javax.swing.table.DefaultTableModel(
@@ -542,7 +538,10 @@ public class staffDashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     public void updateBookList() {
     DefaultTableModel model = (DefaultTableModel) bookList.getModel();
-    model.setRowCount(0);
+    model.setRowCount(0); // Clear the table
+
+    DefaultListModel<String> listModel = new DefaultListModel<>(); // Model for JList
+
     String url = "jdbc:mysql://localhost:3306/lms_db";
     String user = "root";
     String pass = "";
@@ -552,17 +551,25 @@ public class staffDashboard extends javax.swing.JFrame {
          ResultSet rs = stmt.executeQuery("SELECT title, author, isbn, genre, publisher, YEAR(publication_year) AS pub_year, quantity_available, location FROM books")) {
         
         while (rs.next()) {
+            // Add book data to JTable
             model.addRow(new Object[]{
                 rs.getString("title"),
                 rs.getString("author"),
                 rs.getString("isbn"),
                 rs.getString("genre"),
                 rs.getString("publisher"),
-                rs.getString("pub_year"), // Now explicitly retrieves only the year
+                rs.getString("pub_year"), // Display only year
                 rs.getInt("quantity_available"),
                 rs.getString("location")
             });
+
+            // Add book title to JList
+            listModel.addElement(rs.getString("title"));
         }
+
+        // Update the JList with the book titles
+        listBook.setModel(listModel);
+
     } catch (SQLException e) {
         e.printStackTrace();
         JOptionPane.showMessageDialog(this, "Error updating book list: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

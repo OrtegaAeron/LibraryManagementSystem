@@ -7,7 +7,11 @@ package users;
 import java.sql.*;
 import java.awt.Color;
 import java.awt.FontMetrics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -21,6 +25,8 @@ public class memberDashboard extends javax.swing.JFrame {
     public memberDashboard(String email) {
         this.email = email;
         initComponents();
+        loadToTables();
+        loadLocationsIntoComboBox();
     }
 
     public String userName(String email) {
@@ -74,6 +80,7 @@ public class memberDashboard extends javax.swing.JFrame {
         searchField = new javax.swing.JTextField();
         sortByBox = new javax.swing.JComboBox<>();
         reserveButton = new javax.swing.JButton();
+        jCalendar1 = new com.toedter.calendar.JCalendar();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -92,11 +99,11 @@ public class memberDashboard extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Bahnschrift", 0, 60)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(242, 228, 217));
         jLabel1.setText("BALAYAN PUBLIC LIBRARY");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 990, 60));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 1030, 60));
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/libraryMembers.jpg"))); // NOI18N
         jLabel2.setText("jLabel2");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -50, 1800, 310));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, -50, 1800, 310));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1080, 70));
 
@@ -259,6 +266,7 @@ public class memberDashboard extends javax.swing.JFrame {
         jTabbedPane1.addTab("Member Dashboard", jPanel2);
 
         jPanel3.setBackground(new java.awt.Color(245, 236, 213));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         browseTable.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         browseTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -269,10 +277,12 @@ public class memberDashboard extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Title", "Authors", "Genre", "Location"
             }
         ));
         jScrollPane4.setViewportView(browseTable);
+
+        jPanel3.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 34, 692, 493));
 
         searchField.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         searchField.setForeground(new java.awt.Color(153, 153, 153));
@@ -285,41 +295,23 @@ public class memberDashboard extends javax.swing.JFrame {
                 searchFieldFocusLost(evt);
             }
         });
+        searchField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchFieldActionPerformed(evt);
+            }
+        });
+        jPanel3.add(searchField, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 0, 580, 30));
 
-        sortByBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        sortByBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sortByBoxActionPerformed(evt);
+            }
+        });
+        jPanel3.add(sortByBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(604, 0, 190, 30));
 
         reserveButton.setText("RESERVE");
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(580, 580, 580)
-                        .addComponent(sortByBox, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 770, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(71, 71, 71)
-                .addComponent(reserveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sortByBox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(reserveButton)
-                .addGap(132, 132, 132))
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 493, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(86, Short.MAX_VALUE))
-        );
+        jPanel3.add(reserveButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 310, 125, -1));
+        jPanel3.add(jCalendar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 30, 360, 266));
 
         jTabbedPane1.addTab("Browse Books and Reserve", jPanel3);
 
@@ -348,7 +340,7 @@ public class memberDashboard extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(783, Short.MAX_VALUE))
+                .addContainerGap(843, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -360,7 +352,7 @@ public class memberDashboard extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Borrowed, Overdues & Fines", jPanel4);
 
-        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 1080, 649));
+        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 1140, 649));
         jTabbedPane1.setUI(new BasicTabbedPaneUI() {
             @Override
             protected int calculateTabWidth(int tabPlacement, int tabIndex, FontMetrics metrics) {
@@ -368,7 +360,7 @@ public class memberDashboard extends javax.swing.JFrame {
             }
         });
 
-        setBounds(0, 0, 1096, 660);
+        setBounds(0, 0, 1105, 660);
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchFieldFocusGained
@@ -384,6 +376,144 @@ public class memberDashboard extends javax.swing.JFrame {
             searchField.setForeground(Color.GRAY);
         }
     }//GEN-LAST:event_searchFieldFocusLost
+    public void loadToTables(){
+        DefaultTableModel model = (DefaultTableModel) browseTable.getModel();
+    model.setRowCount(0); // Clear existing data
+
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+
+    String fetchBooksSql = "SELECT title, author, genre, location FROM books";
+
+    try (Connection conn = DriverManager.getConnection(url, user, pass);
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(fetchBooksSql)) {
+        
+        while (rs.next()) {
+            model.addRow(new Object[]{
+                rs.getString("title"),
+                rs.getString("author"),
+                rs.getString("genre"),
+                rs.getString("location")
+            });
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error refreshing book list: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    };
+    
+    private void loadLocationsIntoComboBox() {
+    sortByBox.removeAllItems(); // Clear previous items
+    sortByBox.addItem("All Locations"); // Default option
+
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+    String query = "SELECT DISTINCT location FROM books WHERE location IS NOT NULL AND location != ''";
+
+    try (Connection conn = DriverManager.getConnection(url, user, pass);
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(query)) {
+
+        boolean hasData = false;
+        while (rs.next()) {
+            String location = rs.getString("location");
+            sortByBox.addItem(location);
+            hasData = true;
+        }
+
+        if (!hasData) {
+            JOptionPane.showMessageDialog(this, "No locations found in the database.", "Info", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error loading locations: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+    private void searchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchFieldActionPerformed
+        String searchText = searchField.getText().trim();
+    DefaultTableModel model = (DefaultTableModel) browseTable.getModel();
+    model.setRowCount(0); // Clear the table before searching
+
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+
+    // SQL query to search for books by title, author, or genre
+    String searchQuery = "SELECT title, author, genre, location FROM books " +
+                         "WHERE title LIKE ? OR author LIKE ? OR genre LIKE ?";
+
+    try (Connection conn = DriverManager.getConnection(url, user, pass);
+         PreparedStatement pst = conn.prepareStatement(searchQuery)) {
+        
+        String searchPattern = "%" + searchText + "%";
+        pst.setString(1, searchPattern);
+        pst.setString(2, searchPattern);
+        pst.setString(3, searchPattern);
+
+        try (ResultSet rs = pst.executeQuery()) {
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getString("title"),
+                    rs.getString("author"),
+                    rs.getString("genre"),
+                    rs.getString("location")
+                });
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error searching books: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_searchFieldActionPerformed
+       
+    private void sortByBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortByBoxActionPerformed
+        String selectedLocation = sortByBox.getSelectedItem().toString();
+    DefaultTableModel model = (DefaultTableModel) browseTable.getModel();
+    model.setRowCount(0); // Clear table before filtering
+
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+
+    String query = "SELECT title, author, genre, location FROM books";
+    if (!selectedLocation.equals("All Locations")) {
+        query += " WHERE location = ?";
+    }
+
+    try (Connection conn = DriverManager.getConnection(url, user, pass);
+         PreparedStatement pst = conn.prepareStatement(query)) {
+        
+        if (!selectedLocation.equals("All Locations")) {
+            pst.setString(1, selectedLocation);
+        }
+
+        try (ResultSet rs = pst.executeQuery()) {
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getString("title"),
+                    rs.getString("author"),
+                    rs.getString("genre"),
+                    rs.getString("location")
+                });
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error filtering books: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    sortByBox.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent evt) {
+        sortByBoxActionPerformed(evt);
+    }
+});
+    }//GEN-LAST:event_sortByBoxActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -421,6 +551,7 @@ public class memberDashboard extends javax.swing.JFrame {
     private javax.swing.JButton alertButton;
     private javax.swing.JList<String> borrowedList;
     private javax.swing.JTable browseTable;
+    private com.toedter.calendar.JCalendar jCalendar1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

@@ -546,10 +546,10 @@ public class staffDashboard extends javax.swing.JFrame {
     String url = "jdbc:mysql://localhost:3306/lms_db";
     String user = "root";
     String pass = "";
-    
+
     try (Connection conn = DriverManager.getConnection(url, user, pass);
          Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery("SELECT * FROM books")) {
+         ResultSet rs = stmt.executeQuery("SELECT title, author, isbn, genre, publisher, YEAR(publication_year) AS pub_year, quantity_available, location FROM books")) {
         
         while (rs.next()) {
             model.addRow(new Object[]{
@@ -558,7 +558,7 @@ public class staffDashboard extends javax.swing.JFrame {
                 rs.getString("isbn"),
                 rs.getString("genre"),
                 rs.getString("publisher"),
-                rs.getString("publication_year"),
+                rs.getString("pub_year"), // Now explicitly retrieves only the year
                 rs.getInt("quantity_available"),
                 rs.getString("location")
             });
@@ -568,6 +568,7 @@ public class staffDashboard extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Error updating book list: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
+
     private void addBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBookActionPerformed
             String title = bookTitle.getText();
     String author = bookAuthor.getText();
@@ -584,15 +585,22 @@ public class staffDashboard extends javax.swing.JFrame {
         return;
     }
 
+    // Validate that the year is a four-digit number
+    if (!year.matches("\\d{4}")) {
+        JOptionPane.showMessageDialog(this, "Publication year must be a valid 4-digit year (e.g., 2024).", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
     String url = "jdbc:mysql://localhost:3306/lms_db";
     String user = "root";
     String pass = "";
-    
+
     Connection conn = null;
     PreparedStatement pst = null;
-    
+
     String insertBookSql = "INSERT INTO books (title, author, isbn, genre, publisher, publication_year, quantity_available, location) " +
                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
         conn = DriverManager.getConnection(url, user, pass);
@@ -603,12 +611,12 @@ public class staffDashboard extends javax.swing.JFrame {
         pst.setString(3, isbn);
         pst.setString(4, genre);
         pst.setString(5, publisher);
-        pst.setString(6, year);
-        pst.setInt(7, Integer.parseInt(quantity));
+        pst.setInt(6, Integer.parseInt(year));  // Convert year to integer for YEAR type
+        pst.setInt(7, Integer.parseInt(quantity)); // Convert quantity to integer
         pst.setString(8, location);
 
         int rowsInserted = pst.executeUpdate();
-        
+
         if (rowsInserted > 0) {
             bookTitle.setText("");
             bookAuthor.setText("");

@@ -80,7 +80,10 @@ public class memberDashboard extends javax.swing.JFrame {
         searchField = new javax.swing.JTextField();
         sortByBox = new javax.swing.JComboBox<>();
         reserveButton = new javax.swing.JButton();
-        reservationCalendar = new com.toedter.calendar.JCalendar();
+        toDate = new com.toedter.calendar.JDateChooser();
+        jLabel12 = new javax.swing.JLabel();
+        fromDate = new com.toedter.calendar.JDateChooser();
+        jLabel15 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -310,8 +313,15 @@ public class memberDashboard extends javax.swing.JFrame {
         jPanel3.add(sortByBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(604, 0, 190, 30));
 
         reserveButton.setText("RESERVE");
-        jPanel3.add(reserveButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 310, 125, -1));
-        jPanel3.add(reservationCalendar, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 30, 360, 266));
+        jPanel3.add(reserveButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 200, 125, -1));
+        jPanel3.add(toDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 140, 220, 30));
+
+        jLabel12.setText("TO DATE:");
+        jPanel3.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 120, -1, -1));
+        jPanel3.add(fromDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 80, 220, 30));
+
+        jLabel15.setText("FROM DATE:");
+        jPanel3.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 60, -1, -1));
 
         jTabbedPane1.addTab("Browse Books and Reserve", jPanel3);
 
@@ -360,7 +370,7 @@ public class memberDashboard extends javax.swing.JFrame {
             }
         });
 
-        setBounds(0, 0, 1105, 660);
+        setBounds(0, 0, 1105, 694);
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchFieldFocusGained
@@ -551,11 +561,14 @@ public class memberDashboard extends javax.swing.JFrame {
     private javax.swing.JButton alertButton;
     private javax.swing.JList<String> borrowedList;
     private javax.swing.JTable browseTable;
+    private com.toedter.calendar.JDateChooser fromDate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -575,11 +588,11 @@ public class memberDashboard extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
-    private com.toedter.calendar.JCalendar reservationCalendar;
     private javax.swing.JList<String> reservationList;
     private javax.swing.JButton reserveButton;
     private javax.swing.JTextField searchField;
     private javax.swing.JComboBox<String> sortByBox;
+    private com.toedter.calendar.JDateChooser toDate;
     private javax.swing.JList<String> upcomingDues;
     private javax.swing.JLabel welcomeMsg;
     // End of variables declaration//GEN-END:variables

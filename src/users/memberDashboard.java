@@ -80,7 +80,7 @@ public class memberDashboard extends javax.swing.JFrame {
         searchField = new javax.swing.JTextField();
         sortByBox = new javax.swing.JComboBox<>();
         reserveButton = new javax.swing.JButton();
-        jCalendar1 = new com.toedter.calendar.JCalendar();
+        reservationCalendar = new com.toedter.calendar.JCalendar();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -311,7 +311,7 @@ public class memberDashboard extends javax.swing.JFrame {
 
         reserveButton.setText("RESERVE");
         jPanel3.add(reserveButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 310, 125, -1));
-        jPanel3.add(jCalendar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 30, 360, 266));
+        jPanel3.add(reservationCalendar, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 30, 360, 266));
 
         jTabbedPane1.addTab("Browse Books and Reserve", jPanel3);
 
@@ -551,7 +551,6 @@ public class memberDashboard extends javax.swing.JFrame {
     private javax.swing.JButton alertButton;
     private javax.swing.JList<String> borrowedList;
     private javax.swing.JTable browseTable;
-    private com.toedter.calendar.JCalendar jCalendar1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -576,6 +575,7 @@ public class memberDashboard extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
+    private com.toedter.calendar.JCalendar reservationCalendar;
     private javax.swing.JList<String> reservationList;
     private javax.swing.JButton reserveButton;
     private javax.swing.JTextField searchField;

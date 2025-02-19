@@ -544,7 +544,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="com.toedter.calendar.JCalendar" name="jCalendar1">
+            <Component class="com.toedter.calendar.JCalendar" name="reservationCalendar">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
                   <AbsoluteConstraints x="720" y="30" width="360" height="266"/>

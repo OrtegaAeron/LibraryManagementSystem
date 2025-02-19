@@ -100,6 +100,8 @@ public class staffDashboard extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         memberRole = new javax.swing.JComboBox<>();
         addUser = new javax.swing.JButton();
+        jPanel8 = new javax.swing.JPanel();
+        jLabel15 = new javax.swing.JLabel();
         title1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -185,7 +187,7 @@ public class staffDashboard extends javax.swing.JFrame {
         gridBagConstraints.weighty = 0.2;
         jPanel2.add(jScrollPane1, gridBagConstraints);
 
-        tabbedPane.addTab("Reports", jPanel2);
+        tabbedPane.addTab("Book Status Reports", jPanel2);
 
         jPanel3.setBackground(new java.awt.Color(220, 215, 201));
 
@@ -386,7 +388,7 @@ public class staffDashboard extends javax.swing.JFrame {
                 .addGap(34, 34, 34))
         );
 
-        tabbedPane.addTab("Book List", jPanel3);
+        tabbedPane.addTab("Book List Management", jPanel3);
 
         jPanel6.setBackground(new java.awt.Color(220, 215, 201));
 
@@ -516,7 +518,28 @@ public class staffDashboard extends javax.swing.JFrame {
         });
         jPanel4.add(addUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 70, -1, -1));
 
-        tabbedPane.addTab("Users", jPanel4);
+        tabbedPane.addTab("Manage Users", jPanel4);
+
+        jLabel15.setText("gawin mo lang dito ay lagyan ng table, fetch ung mga pending sa reservation, tas icoconfirm mo lang using using button");
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGap(195, 195, 195)
+                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 730, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(85, Short.MAX_VALUE))
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGap(118, 118, 118)
+                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(330, Short.MAX_VALUE))
+        );
+
+        tabbedPane.addTab("Pending Reservations", jPanel8);
 
         jPanel1.add(tabbedPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 1010, -1));
         tabbedPane.setUI(new BasicTabbedPaneUI() {
@@ -1037,6 +1060,7 @@ try {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1052,6 +1076,7 @@ try {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

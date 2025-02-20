@@ -15,9 +15,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 /**
  *
  * @author PC
@@ -34,6 +39,7 @@ public class staffDashboard extends javax.swing.JFrame {
         updateMemberList();
         updateBookConditionList();
         updateDueDateList();
+        fetchBooks();
         memberList.getSelectionModel().addListSelectionListener(e -> {
         if (!e.getValueIsAdjusting()) {
             populateFieldsFromTable();
@@ -84,8 +90,13 @@ public class staffDashboard extends javax.swing.JFrame {
         bookLocation = new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable4 = new javax.swing.JTable();
+        loanedBooks = new javax.swing.JTable();
         jPanel7 = new javax.swing.JPanel();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        overDueBooks = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        borrowerName = new javax.swing.JTextField();
+        titleName = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         memberList = new javax.swing.JTable();
@@ -402,20 +413,193 @@ public class staffDashboard extends javax.swing.JFrame {
 
         jPanel6.setBackground(new java.awt.Color(220, 215, 201));
 
-        jTable4.setModel(new javax.swing.table.DefaultTableModel(
+        loanedBooks.setAutoCreateRowSorter(true);
+        loanedBooks.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Title", "Borrower", "Borrow Date", "Due Date"
             }
         ));
-        jScrollPane4.setViewportView(jTable4);
+        loanedBooks.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        loanedBooks.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                loanedBooksFocusLost(evt);
+            }
+        });
+        loanedBooks.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                loanedBooksMouseClicked(evt);
+            }
+        });
+        loanedBooks.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                loanedBooksPropertyChange(evt);
+            }
+        });
+        jScrollPane4.setViewportView(loanedBooks);
 
         jPanel7.setLayout(new java.awt.GridBagLayout());
+
+        overDueBooks.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Title", "Borrower", "Email", "Due Date", "Borrow Date"
+            }
+        ));
+        overDueBooks.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                overDueBooksFocusLost(evt);
+            }
+        });
+        overDueBooks.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                overDueBooksMouseClicked(evt);
+            }
+        });
+        jScrollPane8.setViewportView(overDueBooks);
+
+        jButton1.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        jButton1.setText("RETURNED");
+
+        borrowerName.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        borrowerName.setForeground(new java.awt.Color(204, 204, 204));
+        borrowerName.setText("Enter Borrower's Name...");
+        borrowerName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                borrowerNameFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                borrowerNameFocusLost(evt);
+            }
+        });
+        borrowerName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                borrowerNameKeyReleased(evt);
+            }
+        });
+
+        titleName.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        titleName.setForeground(new java.awt.Color(204, 204, 204));
+        titleName.setText("Enter Book Title...");
+        titleName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                titleNameFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                titleNameFocusLost(evt);
+            }
+        });
+        titleName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                titleNameKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -425,20 +609,40 @@ public class staffDashboard extends javax.swing.JFrame {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(258, 258, 258)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(300, 300, 300))
+                        .addContainerGap()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(28, 28, 28)
+                                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 495, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addComponent(borrowerName, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(31, 31, 31)
+                                .addComponent(titleName, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(30, 30, 30)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(borrowerName, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(titleName, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(jScrollPane4)
+                        .addGap(1725, 1725, 1725))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
-        tabbedPane.addTab("Loaned Books", jPanel6);
+        tabbedPane.addTab("Loaned and Overdues", jPanel6);
 
         jPanel4.setBackground(new java.awt.Color(220, 215, 201));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -593,7 +797,7 @@ public class staffDashboard extends javax.swing.JFrame {
                     .addComponent(confirmReservation)
                     .addComponent(deleteReservation)
                     .addComponent(cancelReservation))
-                .addContainerGap(699, Short.MAX_VALUE))
+                .addContainerGap(1673, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Pending Reservations", jPanel8);
@@ -655,7 +859,157 @@ public class staffDashboard extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Error updating book list: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
-    
+    public void fetchBooks() {
+        String url = "jdbc:mysql://localhost:3306/lms_db";
+        String user = "root";
+        String pass = "";
+
+        String query1 = """
+            SELECT b.title, u.name, br.borrow_date, br.due_date
+            FROM borrow_records br
+            JOIN books b ON b.book_id = br.book_id
+            JOIN users u ON u.user_id = br.user_id
+            WHERE br.return_date IS NULL
+            ORDER BY br.due_date;
+        """;
+
+        String query2 = """
+            SELECT b.title, u.name, u.email, br.borrow_date, br.due_date
+            FROM borrow_records br
+            JOIN books b ON b.book_id = br.book_id
+            JOIN users u ON u.user_id = br.user_id
+            WHERE br.return_date IS NULL AND br.due_date < DATE(NOW())
+            ORDER BY br.due_date;
+        """;
+
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             Statement stmt = conn.createStatement()) {
+
+            // Fetch loaned books
+            try (ResultSet rs = stmt.executeQuery(query1)) {
+                DefaultTableModel model = (DefaultTableModel) loanedBooks.getModel();
+                model.setRowCount(0); // Clear existing data
+
+                while (rs.next()) {
+                    Object[] row = {
+                            rs.getString("title"),
+                            rs.getString("name"),
+                            rs.getDate("borrow_date"),
+                            rs.getDate("due_date")
+                    };
+                    model.addRow(row);
+                }
+            } 
+
+            
+            try (ResultSet rs = stmt.executeQuery(query2)) {
+                DefaultTableModel model = (DefaultTableModel) overDueBooks.getModel();
+                model.setRowCount(0); // Clear existing data
+
+                while (rs.next()) {
+                    Object[] row = {
+                            rs.getString("title"),
+                            rs.getString("name"),
+                            rs.getString("email"),                          
+                            rs.getDate("due_date"),
+                            rs.getDate("borrow_date")
+                    };
+                    model.addRow(row);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void filterBooks() {
+        String url = "jdbc:mysql://localhost:3306/lms_db";
+        String user = "root";
+        String pass = "";
+
+        // Get input values for filtering
+        String titleFilter = titleName.getText().trim();
+        String borrowerFilter = borrowerName.getText().trim();
+
+        // Base queries
+        String query1 = """
+            SELECT b.title, u.name, br.borrow_date, br.due_date
+            FROM borrow_records br
+            JOIN books b ON b.book_id = br.book_id
+            JOIN users u ON u.user_id = br.user_id
+            WHERE br.return_date IS NULL
+        """;
+
+        String query2 = """
+            SELECT b.title, u.name, u.email, br.borrow_date, br.due_date
+            FROM borrow_records br
+            JOIN books b ON b.book_id = br.book_id
+            JOIN users u ON u.user_id = br.user_id
+            WHERE br.return_date IS NULL AND br.due_date < DATE(NOW())
+        """;
+
+        // Modify queries based on input fields
+        if (!titleFilter.isEmpty()) {
+            query1 += " AND b.title LIKE ?";
+            query2 += " AND b.title LIKE ?";
+        } else if (!borrowerFilter.isEmpty()) {
+            query1 += " AND u.name LIKE ?";
+            query2 += " AND u.name LIKE ?";
+        }
+
+        query1 += " ORDER BY br.due_date";
+        query2 += " ORDER BY br.due_date";
+
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             PreparedStatement stmt1 = conn.prepareStatement(query1);
+             PreparedStatement stmt2 = conn.prepareStatement(query2)) {
+
+            // Set filter values if necessary
+            if (!titleFilter.isEmpty()) {
+                stmt1.setString(1, "%" + titleFilter + "%");
+                stmt2.setString(1, "%" + titleFilter + "%");
+            } else if (!borrowerFilter.isEmpty()) {
+                stmt1.setString(1, "%" + borrowerFilter + "%");
+                stmt2.setString(1, "%" + borrowerFilter + "%");
+            }
+
+            // Fetch loaned books
+            try (ResultSet rs = stmt1.executeQuery()) {
+                DefaultTableModel model = (DefaultTableModel) loanedBooks.getModel();
+                model.setRowCount(0); // Clear existing data
+
+                while (rs.next()) {
+                    Object[] row = {
+                            rs.getString("title"),
+                            rs.getString("name"),
+                            rs.getDate("borrow_date"),
+                            rs.getDate("due_date")
+                    };
+                    model.addRow(row);
+                }
+            }
+
+            // Fetch overdue books
+            try (ResultSet rs = stmt2.executeQuery()) {
+                DefaultTableModel model = (DefaultTableModel) overDueBooks.getModel();
+                model.setRowCount(0); // Clear existing data
+
+                while (rs.next()) {
+                    Object[] row = {
+                            rs.getString("title"),
+                            rs.getString("name"),
+                            rs.getString("email"),
+                            rs.getDate("borrow_date"),
+                            rs.getDate("due_date")
+                    };
+                    model.addRow(row);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void updateBookConditionList() {
     DefaultTableModel model = (DefaultTableModel) bookCondition.getModel();
     model.setRowCount(0); // Clear the table
@@ -1307,6 +1661,87 @@ try {
         JOptionPane.showMessageDialog(null, "Error updating reservation: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
     }//GEN-LAST:event_cancelReservationActionPerformed
+
+    private void titleNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_titleNameFocusLost
+        if (titleName.getText().isEmpty()) {
+            titleName.setText("Enter Book Title...");
+            titleName.setForeground(Color.GRAY);
+        }
+    }//GEN-LAST:event_titleNameFocusLost
+
+    private void titleNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_titleNameFocusGained
+        if (titleName.getText().equals("Enter Book Title...")) {
+            titleName.setText("");
+            titleName.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_titleNameFocusGained
+
+    private void borrowerNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_borrowerNameFocusLost
+        if (borrowerName.getText().isEmpty()) {
+            borrowerName.setText("Enter Borrower's Name...");
+            borrowerName.setForeground(Color.GRAY);
+        }
+    }//GEN-LAST:event_borrowerNameFocusLost
+
+    private void borrowerNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_borrowerNameFocusGained
+        if (borrowerName.getText().equals("Enter Borrower's Name...")) {
+            borrowerName.setText("");
+            borrowerName.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_borrowerNameFocusGained
+
+    private void loanedBooksFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_loanedBooksFocusLost
+        loanedBooks.clearSelection();
+    }//GEN-LAST:event_loanedBooksFocusLost
+
+    private void overDueBooksFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_overDueBooksFocusLost
+        overDueBooks.clearSelection();
+    }//GEN-LAST:event_overDueBooksFocusLost
+
+    private void loanedBooksPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_loanedBooksPropertyChange
+        int row = loanedBooks.getSelectedRow(); 
+        if (row != -1) { 
+            String title = loanedBooks.getValueAt(row, 0).toString();
+            String borrower = loanedBooks.getValueAt(row, 1).toString();
+
+            titleName.setText(title);
+            borrowerName.setText(borrower);
+        }
+    }//GEN-LAST:event_loanedBooksPropertyChange
+
+    private void loanedBooksMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loanedBooksMouseClicked
+        int row = loanedBooks.getSelectedRow(); 
+        if (row != -1) { 
+            String title = loanedBooks.getValueAt(row, 0).toString();
+            String borrower = loanedBooks.getValueAt(row, 1).toString();
+
+            titleName.setText(title);
+            titleName.setForeground(Color.black);
+            borrowerName.setText(borrower);
+            borrowerName.setForeground(Color.black);
+        }
+    }//GEN-LAST:event_loanedBooksMouseClicked
+
+    private void overDueBooksMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_overDueBooksMouseClicked
+        int row = overDueBooks.getSelectedRow(); 
+        if (row != -1) { 
+            String title = overDueBooks.getValueAt(row, 0).toString();
+            String borrower = overDueBooks.getValueAt(row, 1).toString();
+
+            titleName.setText(title);
+            titleName.setForeground(Color.BLACK);
+            borrowerName.setText(borrower);
+            borrowerName.setForeground(Color.black);
+        }
+    }//GEN-LAST:event_overDueBooksMouseClicked
+
+    private void titleNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_titleNameKeyReleased
+        if(titleName.getText().isEmpty()){fetchBooks();}else{filterBooks();}
+    }//GEN-LAST:event_titleNameKeyReleased
+
+    private void borrowerNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_borrowerNameKeyReleased
+        if(borrowerName.getText().isEmpty()){fetchBooks();}else{filterBooks();}
+    }//GEN-LAST:event_borrowerNameKeyReleased
         
     /**
      * @param args the command line arguments
@@ -1356,12 +1791,14 @@ try {
     private javax.swing.JTextField bookQuantity;
     private javax.swing.JTextField bookTitle;
     private javax.swing.JTextField bookYear;
+    private javax.swing.JTextField borrowerName;
     private javax.swing.JButton cancelReservation;
     private javax.swing.JButton confirmReservation;
     private javax.swing.JButton deleteBook;
     private javax.swing.JButton deleteReservation;
     private javax.swing.JButton deleteUser;
     private javax.swing.JTable duedateList;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1392,8 +1829,9 @@ try {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JTable jTable4;
+    private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JList<String> listBook;
+    private javax.swing.JTable loanedBooks;
     private javax.swing.JTextField memberAddress;
     private javax.swing.JTextField memberContact;
     private javax.swing.JTextField memberEmail;
@@ -1401,9 +1839,11 @@ try {
     private javax.swing.JTextField memberName;
     private javax.swing.JTextField memberPassword;
     private javax.swing.JComboBox<String> memberRole;
+    private javax.swing.JTable overDueBooks;
     private javax.swing.JTable reservationList;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JLabel title1;
+    private javax.swing.JTextField titleName;
     private javax.swing.JButton updateBook;
     private javax.swing.JButton updateUser;
     // End of variables declaration//GEN-END:variables

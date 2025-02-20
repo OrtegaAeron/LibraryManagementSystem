@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import javax.swing.table.DefaultTableModel;
@@ -44,6 +45,41 @@ public class memberDashboard extends javax.swing.JFrame {
         }
         return name;
     }
+    
+    
+
+    public void updateUserReservations() {
+    DefaultListModel<String> listModel = new DefaultListModel<>(); // Model for JList
+
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+
+    String query = "SELECT b.title FROM reservations r " +
+               "JOIN books b ON r.book_id = b.book_id " +
+               "JOIN users u ON r.user_id = u.user_id " +
+               "WHERE u.email = ? AND r.status = 'Confirmed'";
+
+    try (Connection conn = DriverManager.getConnection(url, user, pass);
+         PreparedStatement pstmt = conn.prepareStatement(query)) {
+        
+        pstmt.setString(1, email); // Use stored email directly
+        ResultSet rs = pstmt.executeQuery();
+
+        while (rs.next()) {
+            listModel.addElement(rs.getString("title")); // Add book title to list
+        }
+
+        reservationList.setModel(listModel); // Update JList
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error loading reservations: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+
+    
     public void loadToTables(String sortBy) {
         DefaultTableModel model = (DefaultTableModel) browseTable.getModel();
         model.setRowCount(0);

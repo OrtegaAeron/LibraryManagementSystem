@@ -31,6 +31,9 @@ public class staffDashboard extends javax.swing.JFrame {
         initComponents();
         updateBookList();
         loadReservations();
+        updateMemberList();
+        updateBookConditionList();
+        updateDueDateList();
         memberList.getSelectionModel().addListSelectionListener(e -> {
         if (!e.getValueIsAdjusting()) {
             populateFieldsFromTable();
@@ -46,14 +49,15 @@ public class staffDashboard extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel1 = new javax.swing.JPanel();
         tabbedPane = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        bookCondition = new javax.swing.JTable();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        duedateList = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         listBook = new javax.swing.JList<>();
@@ -124,7 +128,6 @@ public class staffDashboard extends javax.swing.JFrame {
         tabbedPane.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
 
         jPanel2.setBackground(new java.awt.Color(220, 215, 201));
-        jPanel2.setLayout(new java.awt.GridBagLayout());
 
         jPanel9.setBackground(new java.awt.Color(220, 215, 201));
 
@@ -139,58 +142,60 @@ public class staffDashboard extends javax.swing.JFrame {
             .addGap(0, 520, Short.MAX_VALUE)
         );
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanel2.add(jPanel9, gridBagConstraints);
-
-        jTable1.setBackground(new java.awt.Color(220, 215, 201));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        bookCondition.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Book", "Condition", "Notes", "Last Checked"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane6.setViewportView(bookCondition);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BELOW_BASELINE_TRAILING;
-        gridBagConstraints.weightx = 2.7;
-        gridBagConstraints.weighty = 0.2;
-        jPanel2.add(jScrollPane1, gridBagConstraints);
+        duedateList.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Borrower", "Book", "Borrow Date", "Return Date"
+            }
+        ));
+        jScrollPane1.setViewportView(duedateList);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(127, 127, 127)
+                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 987, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 843, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(73, 73, 73)
+                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(85, 85, 85))
+        );
 
         tabbedPane.addTab("Book Status Reports", jPanel2);
 
@@ -588,7 +593,7 @@ public class staffDashboard extends javax.swing.JFrame {
                     .addComponent(confirmReservation)
                     .addComponent(deleteReservation)
                     .addComponent(cancelReservation))
-                .addContainerGap(111, Short.MAX_VALUE))
+                .addContainerGap(699, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Pending Reservations", jPanel8);
@@ -650,7 +655,70 @@ public class staffDashboard extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Error updating book list: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
-       
+    
+    public void updateBookConditionList() {
+    DefaultTableModel model = (DefaultTableModel) bookCondition.getModel();
+    model.setRowCount(0); // Clear the table
+
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+
+    String query = "SELECT b.title, bc.condition_status, bc.notes, bc.last_checked " +
+               "FROM book_condition bc " +
+               "JOIN books b ON bc.book_id = b.book_id";  // Change book_id to match actual key
+
+    try (Connection conn = DriverManager.getConnection(url, user, pass);
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(query)) {
+        
+        while (rs.next()) {
+            model.addRow(new Object[]{
+                rs.getString("title"),          // Book title
+                rs.getString("condition_status"), // Condition
+                rs.getString("notes"),         // Notes
+                rs.getDate("last_checked")     // Last Checked
+            });
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error updating book condition list: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+    public void updateDueDateList() {
+    DefaultTableModel model = (DefaultTableModel) duedateList.getModel();
+    model.setRowCount(0); // Clear the table
+
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+
+    String query = "SELECT u.name AS borrower, b.title AS book, br.borrow_date, br.return_date " +
+                   "FROM borrow_records br " +
+                   "JOIN users u ON br.user_id = u.user_id " +
+                   "JOIN books b ON br.book_id = b.book_id";  
+
+    try (Connection conn = DriverManager.getConnection(url, user, pass);
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(query)) {
+        
+        while (rs.next()) {
+            model.addRow(new Object[]{
+                rs.getString("borrower"),  // Borrower's name
+                rs.getString("book"),      // Book title
+                rs.getDate("borrow_date"), // Borrow date
+                rs.getDate("return_date")  // Return date
+            });
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error updating due date list: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
     public void loadReservations() {
     DefaultTableModel model = (DefaultTableModel) reservationList.getModel();
     model.setRowCount(0); // Clear existing data
@@ -1279,6 +1347,7 @@ try {
     private javax.swing.JButton addBook;
     private javax.swing.JButton addUser;
     private javax.swing.JTextField bookAuthor;
+    private javax.swing.JTable bookCondition;
     private javax.swing.JTextField bookGenre;
     private javax.swing.JTextField bookIsbn;
     private javax.swing.JTable bookList;
@@ -1292,6 +1361,7 @@ try {
     private javax.swing.JButton deleteBook;
     private javax.swing.JButton deleteReservation;
     private javax.swing.JButton deleteUser;
+    private javax.swing.JTable duedateList;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1320,8 +1390,8 @@ try {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable4;
     private javax.swing.JList<String> listBook;
     private javax.swing.JTextField memberAddress;

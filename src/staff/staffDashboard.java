@@ -29,7 +29,8 @@ public class staffDashboard extends javax.swing.JFrame {
      */
     public staffDashboard() {
         initComponents();
-        
+        updateBookList();
+        loadReservations();
         memberList.getSelectionModel().addListSelectionListener(e -> {
         if (!e.getValueIsAdjusting()) {
             populateFieldsFromTable();
@@ -101,7 +102,11 @@ public class staffDashboard extends javax.swing.JFrame {
         memberRole = new javax.swing.JComboBox<>();
         addUser = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
-        jLabel15 = new javax.swing.JLabel();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        reservationList = new javax.swing.JTable();
+        confirmReservation = new javax.swing.JButton();
+        deleteReservation = new javax.swing.JButton();
+        cancelReservation = new javax.swing.JButton();
         title1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -520,23 +525,70 @@ public class staffDashboard extends javax.swing.JFrame {
 
         tabbedPane.addTab("Manage Users", jPanel4);
 
-        jLabel15.setText("gawin mo lang dito ay lagyan ng table, fetch ung mga pending sa reservation, tas icoconfirm mo lang using using button");
+        jPanel8.setBackground(new java.awt.Color(220, 215, 201));
+
+        reservationList.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "Borrrower ", "Book Title", "Author", "Status", "From Date", "To Date"
+            }
+        ));
+        jScrollPane7.setViewportView(reservationList);
+
+        confirmReservation.setText("Confirm Reservation");
+        confirmReservation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confirmReservationActionPerformed(evt);
+            }
+        });
+
+        deleteReservation.setText("Delete Reservation");
+        deleteReservation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteReservationActionPerformed(evt);
+            }
+        });
+
+        cancelReservation.setText("Cancel Reservation");
+        cancelReservation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelReservationActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGap(195, 195, 195)
-                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 730, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(85, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 998, Short.MAX_VALUE)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(confirmReservation)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(deleteReservation)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelReservation)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGap(118, 118, 118)
-                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(330, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 544, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(confirmReservation)
+                    .addComponent(deleteReservation)
+                    .addComponent(cancelReservation))
+                .addContainerGap(111, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Pending Reservations", jPanel8);
@@ -598,6 +650,41 @@ public class staffDashboard extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Error updating book list: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
+       
+    public void loadReservations() {
+    DefaultTableModel model = (DefaultTableModel) reservationList.getModel();
+    model.setRowCount(0); // Clear existing data
+
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+    
+    String query = "SELECT u.name AS Borrower, b.title AS BookTitle, b.author AS Author, " +
+               "r.status, r.reservation_date AS FromDate, r.reservation_end_date AS ToDate " +
+               "FROM reservations r " +
+               "JOIN users u ON r.user_id = u.user_id " +
+               "JOIN books b ON r.book_id = b.book_id"; 
+    
+    try (Connection conn = DriverManager.getConnection(url, user, pass);
+         PreparedStatement pst = conn.prepareStatement(query);
+         ResultSet rs = pst.executeQuery()) {
+        
+        while (rs.next()) {
+            model.addRow(new Object[]{
+                rs.getString("Borrower"),
+                rs.getString("BookTitle"),
+                rs.getString("Author"),
+                rs.getString("status"),
+                rs.getString("FromDate"),
+                rs.getString("ToDate")
+            });
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error loading reservations: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
 
     private void addBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBookActionPerformed
             String title = bookTitle.getText();
@@ -1004,6 +1091,154 @@ try {
     private void memberAddressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberAddressActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_memberAddressActionPerformed
+
+    private void confirmReservationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmReservationActionPerformed
+        int selectedRow = reservationList.getSelectedRow();
+    
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(null, "Please select a reservation to confirm.", "No Selection", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    String borrower = reservationList.getValueAt(selectedRow, 0).toString();
+    String bookTitle = reservationList.getValueAt(selectedRow, 1).toString();
+    String currentStatus = reservationList.getValueAt(selectedRow, 3).toString(); // Status column
+
+    // Check if status is 'Pending'
+    if (!currentStatus.equals("Pending")) {
+        JOptionPane.showMessageDialog(null, "Only 'Pending' reservations can be confirmed.", "Invalid Action", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+
+    String updateQuery = "UPDATE reservations r " +
+                         "JOIN users u ON r.user_id = u.user_id " +
+                         "JOIN books b ON r.book_id = b.book_id " +
+                         "SET r.status = 'Confirmed' " +
+                         "WHERE u.name = ? AND b.title = ? AND r.status = 'Pending'";
+
+    try (Connection conn = DriverManager.getConnection(url, user, pass);
+         PreparedStatement pst = conn.prepareStatement(updateQuery)) {
+        
+        pst.setString(1, borrower);
+        pst.setString(2, bookTitle);
+        
+        int affectedRows = pst.executeUpdate();
+        
+        if (affectedRows > 0) {
+            JOptionPane.showMessageDialog(null, "Reservation confirmed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            loadReservations(); // Refresh table
+        } else {
+            JOptionPane.showMessageDialog(null, "No changes made. The reservation might have already been updated.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error updating reservation: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_confirmReservationActionPerformed
+
+    private void deleteReservationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteReservationActionPerformed
+        int selectedRow = reservationList.getSelectedRow();
+    
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(null, "Please select a reservation to delete.", "No Selection", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    String borrower = reservationList.getValueAt(selectedRow, 0).toString();
+    String bookTitle = reservationList.getValueAt(selectedRow, 1).toString();
+
+    int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this reservation?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+    if (confirm != JOptionPane.YES_OPTION) {
+        return; // User canceled the deletion
+    }
+
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+
+    String deleteQuery = "DELETE r FROM reservations r " +
+                         "JOIN users u ON r.user_id = u.user_id " +
+                         "JOIN books b ON r.book_id = b.book_id " +
+                         "WHERE u.name = ? AND b.title = ?";
+
+    try (Connection conn = DriverManager.getConnection(url, user, pass);
+         PreparedStatement pst = conn.prepareStatement(deleteQuery)) {
+        
+        pst.setString(1, borrower);
+        pst.setString(2, bookTitle);
+        
+        int affectedRows = pst.executeUpdate();
+        
+        if (affectedRows > 0) {
+            JOptionPane.showMessageDialog(null, "Reservation deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            loadReservations(); // Refresh table
+        } else {
+            JOptionPane.showMessageDialog(null, "Failed to delete reservation.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error deleting reservation: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_deleteReservationActionPerformed
+
+    private void cancelReservationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelReservationActionPerformed
+        int selectedRow = reservationList.getSelectedRow();
+    
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(null, "Please select a reservation to cancel.", "No Selection", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    String borrower = reservationList.getValueAt(selectedRow, 0).toString();
+    String bookTitle = reservationList.getValueAt(selectedRow, 1).toString();
+    String currentStatus = reservationList.getValueAt(selectedRow, 3).toString();
+
+    if (!currentStatus.equals("Pending") && !currentStatus.equals("Confirmed")) {
+        JOptionPane.showMessageDialog(null, "Only 'Pending' or 'Confirmed' reservations can be cancelled.", "Invalid Action", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to cancel this reservation?", "Confirm Cancellation", JOptionPane.YES_NO_OPTION);
+    if (confirm != JOptionPane.YES_OPTION) {
+        return; 
+    }
+
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+
+    String updateQuery = "UPDATE reservations r " +
+                         "JOIN users u ON r.user_id = u.user_id " +
+                         "JOIN books b ON r.book_id = b.book_id " +
+                         "SET r.status = 'Cancelled' " +
+                         "WHERE u.name = ? AND b.title = ? AND (r.status = 'Pending' OR r.status = 'Confirmed')";
+
+    try (Connection conn = DriverManager.getConnection(url, user, pass);
+         PreparedStatement pst = conn.prepareStatement(updateQuery)) {
+        
+        pst.setString(1, borrower);
+        pst.setString(2, bookTitle);
+        
+        int affectedRows = pst.executeUpdate();
+        
+        if (affectedRows > 0) {
+            JOptionPane.showMessageDialog(null, "Reservation cancelled successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            loadReservations(); // Refresh table
+        } else {
+            JOptionPane.showMessageDialog(null, "Failed to cancel reservation.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error updating reservation: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_cancelReservationActionPerformed
         
     /**
      * @param args the command line arguments
@@ -1052,7 +1287,10 @@ try {
     private javax.swing.JTextField bookQuantity;
     private javax.swing.JTextField bookTitle;
     private javax.swing.JTextField bookYear;
+    private javax.swing.JButton cancelReservation;
+    private javax.swing.JButton confirmReservation;
     private javax.swing.JButton deleteBook;
+    private javax.swing.JButton deleteReservation;
     private javax.swing.JButton deleteUser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1060,7 +1298,6 @@ try {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1083,6 +1320,7 @@ try {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable4;
     private javax.swing.JList<String> listBook;
@@ -1093,6 +1331,7 @@ try {
     private javax.swing.JTextField memberName;
     private javax.swing.JTextField memberPassword;
     private javax.swing.JComboBox<String> memberRole;
+    private javax.swing.JTable reservationList;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JLabel title1;
     private javax.swing.JButton updateBook;

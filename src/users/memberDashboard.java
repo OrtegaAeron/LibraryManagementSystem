@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.ListModel;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import javax.swing.table.DefaultTableModel;
 
@@ -26,6 +27,10 @@ public class memberDashboard extends javax.swing.JFrame {
     public memberDashboard(String email) {
     this.email = email;
     initComponents();
+    loadReservations();
+    loadBorrowedBooks();
+    loadUpcomingDues();
+    loadTotalFines();
     loadToTables("ORDER BY ");
 }
 
@@ -335,7 +340,7 @@ public class memberDashboard extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
+        finesField = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         alertButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
@@ -433,8 +438,8 @@ public class memberDashboard extends javax.swing.JFrame {
 
         jLabel11.setText(" ");
 
-        jLabel13.setFont(new java.awt.Font("Bahnschrift", 0, 36)); // NOI18N
-        jLabel13.setText("COST");
+        finesField.setFont(new java.awt.Font("Bahnschrift", 0, 36)); // NOI18N
+        finesField.setText("COST");
 
         jLabel14.setText(" ");
 
@@ -472,7 +477,7 @@ public class memberDashboard extends javax.swing.JFrame {
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addGap(340, 340, 340)
-                                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(finesField, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(jPanel2Layout.createSequentialGroup()
                                     .addComponent(jLabel14)
@@ -525,7 +530,7 @@ public class memberDashboard extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(16, 16, 16)
-                        .addComponent(jLabel13))
+                        .addComponent(finesField))
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
@@ -709,24 +714,223 @@ public class memberDashboard extends javax.swing.JFrame {
 
     private void reserveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reserveButtonActionPerformed
         int selectedRow = browseTable.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(null, "Please select a book to reserve.", "Warning", JOptionPane.WARNING_MESSAGE);
-            return;
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(null, "Please select a book to reserve.", "Warning", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    String selectedTitle = browseTable.getValueAt(selectedRow, 0).toString();
+    String selectedAuthor = browseTable.getValueAt(selectedRow, 1).toString();
+    String selectedGenre = browseTable.getValueAt(selectedRow, 2).toString();
+
+    if (fromDateChooser.getDate() == null || toDateChooser.getDate() == null) {
+        JOptionPane.showMessageDialog(null, "Please select both start and end dates.", "Warning", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    java.sql.Date sqlFromDate = new java.sql.Date(fromDateChooser.getDate().getTime());
+    java.sql.Date sqlToDate = new java.sql.Date(toDateChooser.getDate().getTime());
+
+    // Insert reservation into database
+    insertReservation(userId, selectedTitle, selectedAuthor, selectedGenre, sqlFromDate, sqlToDate);
+
+    // Clear date choosers
+    fromDateChooser.setDate(null);
+    toDateChooser.setDate(null);
+
+    // Fetch updated reservations and populate JList
+    DefaultListModel<String> listModel = new DefaultListModel<>();
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+
+    try (Connection conn = DriverManager.getConnection(url, user, pass)) {
+        String query = "SELECT books.title " +
+                       "FROM reservations " +
+                       "JOIN books ON reservations.book_id = books.book_id " +
+                       "WHERE reservations.user_id = ?;";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, userId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                
+                boolean hasReservations = false;
+
+                while (rs.next()) {
+                    String bookTitle = rs.getString("title");
+                    listModel.addElement(bookTitle);
+                    hasReservations = true;
+                }
+                if (!hasReservations) {
+                    System.out.println("No reservations found for user: " + userId);
+                }
+            }
         }
-        String selectedTitle = browseTable.getValueAt(selectedRow, 0).toString();
-        String selectedAuthor = browseTable.getValueAt(selectedRow, 1).toString();
-        String selectedGenre = browseTable.getValueAt(selectedRow, 2).toString();
-        if (fromDateChooser.getDate() == null || toDateChooser.getDate() == null) {
-            JOptionPane.showMessageDialog(null, "Please select both start and end dates.", "Warning", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        java.sql.Date sqlFromDate = new java.sql.Date(fromDateChooser.getDate().getTime());
-        java.sql.Date sqlToDate = new java.sql.Date(toDateChooser.getDate().getTime());
-        insertReservation(userId, selectedTitle, selectedAuthor, selectedGenre, sqlFromDate, sqlToDate);
-        
-        fromDateChooser.setDate(null);
-        toDateChooser.setDate(null);
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    // Set updated model to the JList
+    reservationList.setModel(listModel);
+    reservationList.revalidate();
+    reservationList.repaint();
+    
     }//GEN-LAST:event_reserveButtonActionPerformed
+private void loadReservations() {
+    DefaultListModel<String> listModel = new DefaultListModel<>();
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+
+    try (Connection conn = DriverManager.getConnection(url, user, pass)) {
+        String query = "SELECT books.title " +
+                       "FROM reservations " +
+                       "JOIN books ON reservations.book_id = books.book_id " +
+                       "WHERE reservations.user_id = ?;";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, userId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                
+                System.out.println("Fetching reservations for user: " + userId);
+                boolean hasReservations = false;
+
+                while (rs.next()) {
+                    String bookTitle = rs.getString("title");
+                    System.out.println("Book found: " + bookTitle);
+                    listModel.addElement(bookTitle);
+                    hasReservations = true;
+                }
+
+                if (!hasReservations) {
+                    System.out.println("No reservations found for user: " + userId);
+                }
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    // Set updated model to the JList
+    reservationList.setModel(listModel);
+    reservationList.revalidate();
+    reservationList.repaint();
+    System.out.println("Updated reservation list in JList.");
+}
+
+    private void loadBorrowedBooks() {
+    DefaultListModel<String> listModel = new DefaultListModel<>();
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+
+    try (Connection conn = DriverManager.getConnection(url, user, pass)) {
+        // Modify this query based on how your system tracks borrowed books
+        String query = "SELECT books.title " +
+               "FROM borrow_records " +
+               "JOIN books ON borrow_records.book_id = books.book_id " +
+               "WHERE borrow_records.user_id = ?;";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, userId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                
+                System.out.println("Fetching borrowed books for user: " + userId);
+                boolean hasBorrowedBooks = false;
+
+                while (rs.next()) {
+                    String bookTitle = rs.getString("title");
+                    System.out.println("Borrowed book found: " + bookTitle);
+                    listModel.addElement(bookTitle);
+                    hasBorrowedBooks = true;
+                }
+
+                if (!hasBorrowedBooks) {
+                    System.out.println("No borrowed books found for user: " + userId);
+                }
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    // Set updated model to the JList
+    borrowedList.setModel(listModel);
+    borrowedList.revalidate();
+    borrowedList.repaint();
+    System.out.println("Updated borrowed book list in JList.");
+}
+
+        private void loadUpcomingDues() {
+    DefaultListModel<String> listModel = new DefaultListModel<>();
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+
+    try (Connection conn = DriverManager.getConnection(url, user, pass)) {
+        // SQL query to fetch book titles and due dates
+        String query = "SELECT books.title, borrow_records.due_date " +
+                       "FROM borrow_records " +
+                       "JOIN books ON borrow_records.book_id = books.book_id " +
+                       "WHERE borrow_records.user_id = ? " +
+                       "ORDER BY borrow_records.due_date ASC;";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, userId); // Bind the user ID
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                boolean hasUpcomingDues = false;
+
+                while (rs.next()) {
+                    String bookTitle = rs.getString("title");
+                    Date dueDate = rs.getDate("due_date");
+                    String formattedDue = bookTitle + " - Due: " + dueDate.toString();
+                    listModel.addElement(formattedDue);
+                    hasUpcomingDues = true;
+                }
+
+                if (!hasUpcomingDues) {
+                    listModel.addElement("No upcoming dues.");
+                }
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    // Update JList
+    upcomingDues.setModel(listModel);
+    upcomingDues.revalidate();
+    upcomingDues.repaint();
+}
+
+        private void loadTotalFines() {
+    String url = "jdbc:mysql://localhost:3306/lms_db";
+    String user = "root";
+    String pass = "";
+    double totalFines = 0.0; // Initialize total fines
+
+    try (Connection conn = DriverManager.getConnection(url, user, pass)) {
+        // SQL query to calculate total fines for the user
+        String query = "SELECT SUM(amount_paid) AS total_fines FROM fine_payments WHERE user_id = ?;";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, userId); // Bind the user ID
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    totalFines = rs.getDouble("total_fines"); // Retrieve the sum of fines
+                }
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    // Set the total fines in the finesField text field
+    finesField.setText(String.format("%.2f", totalFines)); // Format to 2 decimal places
+}
+
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -765,12 +969,12 @@ public class memberDashboard extends javax.swing.JFrame {
     private javax.swing.JTable borrowedBookList;
     private javax.swing.JList<String> borrowedList;
     private javax.swing.JTable browseTable;
+    private javax.swing.JLabel finesField;
     private com.toedter.calendar.JDateChooser fromDateChooser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;

@@ -168,7 +168,7 @@
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" alignment="0" attributes="0">
                                               <EmptySpace min="340" pref="340" max="-2" attributes="0"/>
-                                              <Component id="jLabel13" min="-2" pref="330" max="-2" attributes="0"/>
+                                              <Component id="finesField" min="-2" pref="330" max="-2" attributes="0"/>
                                           </Group>
                                           <Component id="jLabel6" min="-2" pref="341" max="-2" attributes="0"/>
                                       </Group>
@@ -244,7 +244,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="16" pref="16" max="-2" attributes="0"/>
-                              <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
+                              <Component id="finesField" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jLabel6" min="-2" pref="77" max="-2" attributes="0"/>
                       </Group>
@@ -404,7 +404,7 @@
                 <Property name="text" type="java.lang.String" value=" "/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel13">
+            <Component class="javax.swing.JLabel" name="finesField">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Bahnschrift" size="36" style="0"/>

@@ -24,10 +24,11 @@ public class memberDashboard extends javax.swing.JFrame {
      * Creates new form memberDashboard
      */
     public memberDashboard(String email) {
-        this.email = email;
-        initComponents();
-        loadToTables("ORDER BY ");
-    }
+    this.email = email;
+    initComponents();
+    loadToTables("ORDER BY ");
+}
+
 
     public String userName(String email) {
         String query = "SELECT user_id, name FROM users WHERE email = ?";
@@ -47,7 +48,7 @@ public class memberDashboard extends javax.swing.JFrame {
     }
     
     
-
+    
     public void updateUserReservations() {
     DefaultListModel<String> listModel = new DefaultListModel<>(); // Model for JList
 
@@ -120,6 +121,8 @@ public class memberDashboard extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error refreshing book list: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    
     private void loadMostBorrowedBooks() {
         DefaultTableModel model = (DefaultTableModel) browseTable.getModel();
         model.setRowCount(0);
@@ -347,7 +350,7 @@ public class memberDashboard extends javax.swing.JFrame {
         jLabel15 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        borrowedBookList = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MEMBER DASHBOARD");
@@ -599,21 +602,21 @@ public class memberDashboard extends javax.swing.JFrame {
 
         jPanel4.setBackground(new java.awt.Color(245, 236, 213));
 
-        jTable1.setAutoCreateRowSorter(true);
-        jTable1.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        borrowedBookList.setAutoCreateRowSorter(true);
+        borrowedBookList.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
+        borrowedBookList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null},
-                {null},
-                {null},
-                {null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Borrowed Books"
+                "Borrowed Books", "Borrow Date", "Return Date", "Fines"
             }
         ));
-        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane6.setViewportView(jTable1);
+        borrowedBookList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane6.setViewportView(borrowedBookList);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -621,15 +624,15 @@ public class memberDashboard extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(843, Short.MAX_VALUE))
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 925, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(194, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 487, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(106, Short.MAX_VALUE))
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Borrowed, Overdues & Fines", jPanel4);
@@ -759,6 +762,7 @@ public class memberDashboard extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton alertButton;
+    private javax.swing.JTable borrowedBookList;
     private javax.swing.JList<String> borrowedList;
     private javax.swing.JTable browseTable;
     private com.toedter.calendar.JDateChooser fromDateChooser;
@@ -787,7 +791,6 @@ public class memberDashboard extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JList<String> reservationList;
     private javax.swing.JButton reserveButton;
     private javax.swing.JTextField searchField;

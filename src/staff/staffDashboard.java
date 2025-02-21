@@ -1,6 +1,7 @@
 package staff;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FontMetrics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -19,6 +20,9 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 
 public class staffDashboard extends javax.swing.JFrame {
 
@@ -112,6 +116,7 @@ public class staffDashboard extends javax.swing.JFrame {
         finesTable = new javax.swing.JTable();
         jLabel19 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        addUser1 = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
         jScrollPane7 = new javax.swing.JScrollPane();
         reservationList = new javax.swing.JTable();
@@ -173,6 +178,7 @@ public class staffDashboard extends javax.swing.JFrame {
             }
         });
         jScrollPane6.setViewportView(bookCondition);
+        applyRenderer();
 
         duedateList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -876,6 +882,14 @@ public class staffDashboard extends javax.swing.JFrame {
         });
         jPanel4.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 380, 90, 40));
 
+        addUser1.setText("ADD");
+        addUser1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addUser1ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(addUser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 70, -1, -1));
+
         tabbedPane.addTab("Manage Users", jPanel4);
 
         jPanel8.setBackground(new java.awt.Color(220, 215, 201));
@@ -1225,35 +1239,65 @@ public class staffDashboard extends javax.swing.JFrame {
     }
 
     public void updateBookConditionList() {
-    DefaultTableModel model = (DefaultTableModel) bookCondition.getModel();
-    model.setRowCount(0); // Clear the table
+        DefaultTableModel model = (DefaultTableModel) bookCondition.getModel();
+        model.setRowCount(0);
 
-    String url = "jdbc:mysql://localhost:3306/lms_db";
-    String user = "root";
-    String pass = "";
+        String url = "jdbc:mysql://localhost:3306/lms_db";
+        String user = "root";
+        String pass = "";
 
-    String query = "SELECT b.title, bc.condition_status, bc.notes, bc.last_checked " +
-               "FROM book_condition bc " +
-               "JOIN books b ON bc.book_id = b.book_id";  // Change book_id to match actual key
+        String query = "SELECT b.title, bc.condition_status, bc.notes, bc.last_checked " +
+                "FROM book_condition bc " +
+                "JOIN books b ON bc.book_id = b.book_id";
 
-    try (Connection conn = DriverManager.getConnection(url, user, pass);
-         Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery(query)) {
-        
-        while (rs.next()) {
-            model.addRow(new Object[]{
-                rs.getString("title"),          // Book title
-                rs.getString("condition_status"), // Condition
-                rs.getString("notes"),         // Notes
-                rs.getDate("last_checked")     // Last Checked
-            });
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                        rs.getString("title"),          // Book title
+                        rs.getString("condition_status"), // Condition
+                        rs.getString("notes"),         // Notes
+                        rs.getDate("last_checked")     // Last Checked
+                });
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error updating book condition list: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error updating book condition list: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
-}
+
+    class ConditionCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            String condition = (String) table.getValueAt(row, 1);
+
+            if ("Good".equalsIgnoreCase(condition)) {
+                cell.setBackground(Color.GREEN);
+                cell.setForeground(Color.BLACK);
+            } else if ("Damaged".equalsIgnoreCase(condition)) {
+                cell.setBackground(Color.ORANGE);
+                cell.setForeground(Color.BLACK);
+            } else if ("Lost".equalsIgnoreCase(condition)) {
+                cell.setBackground(Color.RED);
+                cell.setForeground(Color.WHITE);
+            } else {
+                cell.setBackground(Color.WHITE);
+                cell.setForeground(Color.BLACK);
+            }
+
+            return cell;
+        }
+    }
+
+    public void applyRenderer() {
+        bookCondition.setDefaultRenderer(Object.class, (TableCellRenderer) new ConditionCellRenderer());
+    }
 
     public void updateDueDateList() {
     DefaultTableModel model = (DefaultTableModel) duedateList.getModel();
@@ -2197,6 +2241,10 @@ try {
         JOptionPane.showMessageDialog(null, "Please select a row first.");
     }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void addUser1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUser1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addUser1ActionPerformed
         
     /**
      * @param args the command line arguments
@@ -2236,6 +2284,7 @@ try {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBook;
     private javax.swing.JButton addUser;
+    private javax.swing.JButton addUser1;
     private javax.swing.JTextField bookAuthor;
     private javax.swing.JTable bookCondition;
     private javax.swing.JTextField bookGenre;
